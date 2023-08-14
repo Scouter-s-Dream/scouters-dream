@@ -21,16 +21,23 @@ while True:
 
     cv2.imshow('Mask', mask)
     
+    detections.clear()
+     
     contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     
     for cnt in contours:
         area = cv2.contourArea(cnt)
         
-        if area > 400:
+        if area > 700:
             x, y, w, h = cv2.boundingRect(cnt)
-            cv2.rectangle(roi, (x, y), (x + w, y + h), (0, 255, 0), 3)
-            detections.append([x, y, w, h])    
-            
+            detections.append([x, y, w, h])   
+
+    detections.sort(key=lambda det: det[2] * det[3], reverse=True)
+    
+    for det in detections[:6]:
+        x, y, w, h = det
+        cv2.rectangle(roi, (x, y), (x + w, y + h), (0, 255, 0), 3)
+
     cv2.imshow('Frame', frame)
 
     cv2.setMouseCallback('Frame', click_event)
