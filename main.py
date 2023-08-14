@@ -12,9 +12,13 @@ detections = []
 while True:
     ret, frame = cap.read()
     roi = frame[240:504, 151:1217] 
-    
+        
     mask = object_detector.apply(roi)
     
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+
     cv2.imshow('Mask', mask)
     
     contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -25,7 +29,7 @@ while True:
         if area > 400:
             x, y, w, h = cv2.boundingRect(cnt)
             cv2.rectangle(roi, (x, y), (x + w, y + h), (0, 255, 0), 3)
-            detections.append([x, y, w, h])
+            detections.append([x, y, w, h])    
             
     cv2.imshow('Frame', frame)
 
