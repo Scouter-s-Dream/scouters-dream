@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 import cv2
 
-model = YOLO(r'weights\best.pt')
+model = YOLO(r'digit_weights\best.pt')
 threshold = 0.2
 img = cv2.imread(r'test_images\close robot.png')
     
