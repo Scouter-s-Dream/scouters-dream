@@ -1,10 +1,15 @@
 import cv2
 import numpy as np
+from time import time
 
 def click_event(event, x, y, flags, params):
     if event == cv2.EVENT_LBUTTONDOWN:
         print(x, ' ', y)
 
+def show_fps(frame, time_then):
+    fps = 1 / (time() - time_then)
+    cv2.putText(frame, f'FPS: {fps}', (100, 30), cv2.FONT_HERSHEY_SIMPLEX, 40, (0, 0, 255), 2)
+    
 class Qual:
     def __init__(self, qual_num: int, blue_allince: list, red_allince: list):
         self.qual_num = qual_num
