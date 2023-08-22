@@ -18,6 +18,8 @@ tracked_robots = {}
 
 while True:
     ret, frame = cap.read()
+    
+    fps_start = time()
 
     if frame_count % 2 == 1:
         ret, frame = cap.read()
@@ -69,6 +71,8 @@ while True:
         
         cv2.putText(roi, str(custom_id), (xmin + 5, ymin - 8),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                    
+    show_fps(frame, fps_start)
 
     cv2.imshow('Frame', frame)
 
@@ -82,6 +86,6 @@ while True:
 cv2.destroyAllWindows()
 cap.release()
 
-end = time()
+overall_time = (time() - start) / 60
 
-print('Time Seconds: ', end - start)
+print('Time minutes: {:.2f}'.format(overall_time))
