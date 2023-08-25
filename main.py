@@ -1,12 +1,13 @@
 import cv2
+import numpy as np
 from ultralytics import YOLO
 from deep_sort_realtime.deepsort_tracker import DeepSort
 from time import time
-from sd_utills import click_event, show_fps
+from sd_utills import show_pixel_location, show_fps, skip_frames, Qual
 
 bumper_model = YOLO(r'bumper_weights\best.pt')
-tracker = DeepSort(max_iou_distance=10, max_age=100)
-threshold = 0.45
+tracker = DeepSort(max_iou_distance=10, max_age=10)
+threshold = 0.3
 
 cap = cv2.VideoCapture(r'test_videos\Final 1 dis 1 ISR - Made with Clipchamp.mp4')
 frame_count = 0
@@ -16,15 +17,14 @@ start = time()
 robot_numbers = [5990, 1943, 1690, 2630, 1576, 1577]
 tracked_robots = {}
 
+robot_trajectories = {robot_id: [] for robot_id in robot_numbers}
+
 while True:
     ret, frame = cap.read()
     
+    skip_frames(cap, skip_frames=5)
+    
     fps_start = time()
-
-    if frame_count % 2 == 1:
-        ret, frame = cap.read()
-        
-    frame_count += 1
 
     if not ret:
         break
@@ -71,12 +71,15 @@ while True:
         
         cv2.putText(roi, str(custom_id), (xmin + 5, ymin - 8),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        
+        robot_trajectories[custom_id].append((xmin + (xmax - xmin) / 2, ymin + (ymax - ymin) / 2))
+
                     
     show_fps(frame, fps_start)
 
     cv2.imshow('Frame', frame)
 
-    cv2.setMouseCallback('Frame', click_event)
+    cv2.setMouseCallback('Frame', show_pixel_location)
 
     key = cv2.waitKey(1)
 
@@ -89,3 +92,7 @@ cap.release()
 overall_time = (time() - start) / 60
 
 print('Time minutes: {:.2f}'.format(overall_time))
+
+qual = Qual(1, [5990, 1943, 2630], [1690, 1576, 1577])
+
+qual.generate_heatmap(roi, robot_trajectories, robot_numbers, pixel_size=10)
