@@ -11,8 +11,8 @@ def main():
     )
     
     id_to_robot_number = {
-        1: '5990',
-        2: '1943',
+        1: '1943',
+        2: '5990',
         3: '1577',
         4: '1576',
         5: '1690',
@@ -20,26 +20,44 @@ def main():
     }
     
     trajectories = {robot_id: [] for robot_id in id_to_robot_number.values()}
+
+    lost_robots = {}
+    current_robots = set()
+    bad_robots = set()
     
     model = YOLO(r"bumper_weights\best.pt")
 
-    source = r'test_videos\Final 1 dis 1 ISR - Made with Clipchamp.mp4'
+    source = r'test_videos\dis 1 final 1.mp4'
     
-    for result in model.track(source=source, show=False, stream=True):
+    for result in model.track(source=source, show=False, stream=True, verbose=False):
         frame = result.orig_img
         
         detections = sv.Detections.from_yolov8(result)
         
         if result.boxes.id is not None:
             detections.tracker_id = [id_to_robot_number.get(int(id), id) for id in result.boxes.id.cpu().numpy()]
-            
+                        
+            bad_robots = set(detections.tracker_id) - set(id_to_robot_number.values())
+                                    
             for detection, tracker_id in zip(detections.xyxy, detections.tracker_id):
-                x1, y1, x2, y2 = detection
-
-                center_x = (x1 + x2) // 2
-                center_y = (y1 + y2) // 2
-
-                trajectories[tracker_id].append((center_x, center_y))
+                current_robots.add(tracker_id)
+                                
+                if lost_robots and bad_robots:
+                    print(f'Lost Robot: {lost_robots} Bad Robot: {bad_robots}')
+                    print(f'Bad Robot? {detections.tracker_id[-1]}')
+                else:
+                    x1, y1, x2, y2 = detection
+                    
+                    try:
+                        center_x = (x1 + x2) // 2
+                        center_y = (y1 + y2) // 2
+                        
+                        trajectories[tracker_id].append((center_x, center_y))
+                    except:
+                        pass
+                
+            lost_robots = set(id_to_robot_number.values()) - set(current_robots)
+            current_robots.clear()
                 
         labels = [
              f'Robot: {tracker_id} Conf:{confidence:.2f}'
