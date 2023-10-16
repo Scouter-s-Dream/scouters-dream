@@ -1,40 +1,86 @@
 import cv2
+from ultralytics import YOLO
+import supervision as sv
+from sd_utills import Qual
 
-def click_event(event, x, y, flags, params):
-    if event == cv2.EVENT_LBUTTONDOWN:
-        print(x, ' ', y)
+def main():
+    box_annotator = sv.BoxAnnotator(
+        thickness=2,
+        text_thickness=1,
+        text_scale=0.35
+    )
+    
+    id_to_robot_number = {
+        1: '1943',
+        2: '5990',
+        3: '1577',
+        4: '1576',
+        5: '1690',
+        6: '2630'
+    }
+    
+    trajectories = {robot_id: [] for robot_id in id_to_robot_number.values()}
 
-cap = cv2.VideoCapture(r'Final 1 dis 1 ISR - Made with Clipchamp.mp4')
-object_detector = cv2.createBackgroundSubtractorMOG2(100, 200, False)
+    lost_robots = {}
+    current_robots = set()
+    bad_robots = set()
+    
+    model = YOLO(r"bumper_weights\best.pt")
 
-detections = []
-  
-while True:
-    ret, frame = cap.read()
-    roi = frame[240:504, 151:1217] 
+    source = r'test_videos\dis 1 final 1.mp4'
     
-    mask = object_detector.apply(roi)
-    
-    cv2.imshow('Mask', mask)
-    
-    contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    
-    for cnt in contours:
-        area = cv2.contourArea(cnt)
+    for result in model.track(source=source, show=False, stream=True, verbose=False):
+        frame = result.orig_img
         
-        if area > 400:
-            x, y, w, h = cv2.boundingRect(cnt)
-            cv2.rectangle(roi, (x, y), (x + w, y + h), (0, 255, 0), 3)
-            detections.append([x, y, w, h])
-            
-    cv2.imshow('Frame', frame)
-
-    cv2.setMouseCallback('Frame', click_event)
-
-    key = cv2.waitKey(1)
+        detections = sv.Detections.from_yolov8(result)
+        
+        if result.boxes.id is not None:
+            detections.tracker_id = [id_to_robot_number.get(int(id), id) for id in result.boxes.id.cpu().numpy()]
+                        
+            bad_robots = set(detections.tracker_id) - set(id_to_robot_number.values())
+                                    
+            for detection, tracker_id in zip(detections.xyxy, detections.tracker_id):
+                current_robots.add(tracker_id)
+                                
+                if lost_robots and bad_robots:
+                    print(f'Lost Robot: {lost_robots} Bad Robot: {bad_robots}')
+                    print(f'Bad Robot? {detections.tracker_id[-1]}')
+                else:
+                    x1, y1, x2, y2 = detection
+                    
+                    try:
+                        center_x = (x1 + x2) // 2
+                        center_y = (y1 + y2) // 2
+                        
+                        trajectories[tracker_id].append((center_x, center_y))
+                    except:
+                        pass
+                
+            lost_robots = set(id_to_robot_number.values()) - set(current_robots)
+            current_robots.clear()
+                
+        labels = [
+             f'Robot: {tracker_id} Conf:{confidence:.2f}'
+             for _, confidence, _, tracker_id 
+             in detections
+         ]
+        
+        frame = box_annotator.annotate(
+            scene=frame,
+            detections=detections,
+            labels=labels
+        )
+        
+        cv2.imshow('Final-1-Dis-1', frame)
+        
+        if (cv2.waitKey(1) == ord('q')):
+            break
     
-    if key == ord('q'):
-        break
+    cv2.destroyAllWindows()
     
-cv2.destroyAllWindows()
-cap.release()
+    qual = Qual(1, [5990, 1943, 2630], [1690, 1576, 1577])
+    
+    qual.generate_heatmap(frame, trajectories, list(id_to_robot_number.values()), pixel_size=10)
+
+if __name__ == "__main__":
+    main()
