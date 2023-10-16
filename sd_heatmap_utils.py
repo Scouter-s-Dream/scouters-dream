@@ -135,4 +135,4 @@ class Qual:
                             fargs=(resized_shape, robot_trajectories, robot_trails, pixel_size, im, ax, team_number_annotations, colormap))
 
         output_file = f'trajectory_animation_qual{self.qual_num}.gif'
-        ani.save(output_file, writer='PILL')
+        ani.save(output_file, writer='Pillow')
