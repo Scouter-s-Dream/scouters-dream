@@ -1,7 +1,7 @@
 import cv2
 from ultralytics import YOLO
 import supervision as sv
-from sd_utills import Qual
+from sd_heatmap_utils import Qual
 
 def main():
     box_annotator = sv.BoxAnnotator(
