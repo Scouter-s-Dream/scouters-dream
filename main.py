@@ -1,7 +1,7 @@
 import cv2
-from ultralytics import YOLO
 import supervision as sv
-from sd_utills import Qual
+from sd_heatmap_utils import Qual
+from sd_tracking_utils import SdUtils as sdu
 
 def main():
     box_annotator = sv.BoxAnnotator(
@@ -19,23 +19,22 @@ def main():
         6: '2630'
     }
     
-    trajectories = {robot_id: [] for robot_id in id_to_robot_number.values()}
+    trajectories = sdu.setup_trajectories(id_to_robot_number)
 
     lost_robots = {}
     current_robots = set()
     bad_robots = set()
     
-    model = YOLO(r"bumper_weights\best.pt")
+    model = sdu.setup_model()
 
     source = r'test_videos\dis 1 final 1.mp4'
     
     for result in model.track(source=source, show=False, stream=True, verbose=False):
         frame = result.orig_img
-        
         detections = sv.Detections.from_yolov8(result)
-        
+    
         if result.boxes.id is not None:
-            detections.tracker_id = [id_to_robot_number.get(int(id), id) for id in result.boxes.id.cpu().numpy()]
+            detections.tracker_id = sdu.map_tracker_ids(id_to_robot_number, result.boxes.id.cpu().numpy())
                         
             bad_robots = set(detections.tracker_id) - set(id_to_robot_number.values())
                                     
@@ -45,6 +44,7 @@ def main():
                 if lost_robots and bad_robots:
                     print(f'Lost Robot: {lost_robots} Bad Robot: {bad_robots}')
                     print(f'Bad Robot? {detections.tracker_id[-1]}')
+
                 else:
                     x1, y1, x2, y2 = detection
                     

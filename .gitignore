@@ -1,1 +1,5 @@
 __pycache__/sd_utills.cpython-310.pyc
+.vscode/settings.json
+__pycache__/sd_heatmap_utils.cpython-310.pyc
+Pipfile.lock
+__pycache__/sd_tracking_utils.cpython-310.pyc
