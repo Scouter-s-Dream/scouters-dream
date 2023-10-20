@@ -2,6 +2,9 @@ import cv2
 import supervision as sv
 from sd_heatmap_utils import Qual
 from sd_tracking_utils import SdUtils as sdu
+import platform
+from time import time
+import sd_utils as utils
 
 def main():
     box_annotator = sv.BoxAnnotator(
@@ -27,9 +30,12 @@ def main():
     
     model = sdu.setup_model()
 
-    source = r'test_videos\dis 1 final 1.mp4'
+    source = r'test_videos\dis 1 final 1.mp4' if platform.system() == "Windows" else './test_videos/dis 1 final 1.mp4'
     
     for result in model.track(source=source, show=False, stream=True, verbose=False):
+        
+        start_time = time()
+        
         frame = result.orig_img
         detections = sv.Detections.from_yolov8(result)
     
@@ -71,8 +77,11 @@ def main():
             labels=labels
         )
         
+        # utils.show_fps(frame, start_time )
+
         cv2.imshow('Final-1-Dis-1', frame)
         
+
         if (cv2.waitKey(1) == ord('q')):
             break
     
@@ -82,5 +91,6 @@ def main():
     
     qual.generate_heatmap(frame, trajectories, list(id_to_robot_number.values()), pixel_size=10)
 
+    
 if __name__ == "__main__":
     main()

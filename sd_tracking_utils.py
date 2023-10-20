@@ -1,4 +1,5 @@
 from ultralytics import YOLO
+import platform
 
 class SdUtils:
     """
@@ -30,7 +31,7 @@ class SdUtils:
         ---
            - YOLO: The YOLO model configured with pre-trained weights.
         """
-        return YOLO(r"bumper_weights\v3\best (2).pt")
+        return YOLO(r"bumper_weights\v3\best (2).pt") if platform.system() == "Windows" else YOLO("./bumper_weights/v3/best (2).pt")
 
     @staticmethod
     def map_tracker_ids(robot_mapping, id_list):
