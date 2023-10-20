@@ -23,16 +23,20 @@ class SdUtils:
         return {robot_id: [] for robot_id in robot_mapping.values()}
 
     @staticmethod
-    def setup_model():
+    def setup_model(path: str):
         """
         ## Set up the YOLO model with pre-trained weights.
+        
+        Args:
+        ----
+            - path (str): the path to the model .pt file
         ----
         Returns:
         ---
            - YOLO: The YOLO model configured with pre-trained weights.
         """
-        return YOLO(r"bumper_weights\v3\best (2).pt") if platform.system() == "Windows" else YOLO("./bumper_weights/v3/best (2).pt")
-
+        return YOLO(path)
+    
     @staticmethod
     def map_tracker_ids(robot_mapping, id_list):
         """

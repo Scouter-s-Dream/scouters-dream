@@ -28,7 +28,7 @@ def main():
     current_robots = set()
     bad_robots = set()
     
-    model = sdu.setup_model()
+    model = sdu.setup_model("bumper_weights/v4/best.pt")
 
     source = r'test_videos\dis 1 final 1.mp4' if platform.system() == "Windows" else './test_videos/dis 1 final 1.mp4'
     
