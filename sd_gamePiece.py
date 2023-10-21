@@ -1,20 +1,20 @@
 from ultralytics import YOLO
-import platform
+from sd_robot import Robot
+import numpy as np
+
+GREED_POSITION = (np.array([0, 0]), np.array(0, 0))
 
 class GamePiece():
     
-    @staticmethod
-    def setup_model(path: str):
-        """
-        ## Set up the YOLO model with pre-trained weights.
+    def __init__(self,id:int, type:bool, position: tuple[np.ndarray, np.ndarray]):
+        self.id = id
+        self.type = type
+        self.position = position
         
-        Args:
-        ----
-            - path (str): the path to the model .pt file
-        ----
-        Returns:
-        ---
-           - YOLO: The YOLO model configured with pre-trained weights.
-        """
-        return YOLO(path)
+    def update_position(self, position: tuple[np.ndarray, np.ndarray]):
+        self.position = position
+        
+    def get_position(self):
+        return self.position   
+ 
     
