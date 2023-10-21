@@ -30,7 +30,7 @@ class SdUtils:
         ---
            - YOLO: The YOLO model configured with pre-trained weights.
         """
-        return YOLO(r"bumper_weights\v3\best (2).pt")
+        return YOLO(r"bumper_weights\v4\best (3).pt")
 
     @staticmethod
     def map_tracker_ids(robot_mapping, id_list):
