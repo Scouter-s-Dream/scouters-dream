@@ -28,7 +28,7 @@ def main():
     current_robots = set()
     bad_robots = set()
     
-    model = sdu.setup_model("game_piece_weights/best.pt")
+    model = sdu.setup_model("bumper_weights/v4/best (3).pt")
 
     source = "test_videos/dis 1 final 1.mp4"
     
@@ -73,11 +73,11 @@ def main():
         frame = box_annotator.annotate(
             scene=frame,
             detections=detections,
-            # labels=labels
+            labels=labels
         )
         
         # utils.show_fps(frame, start_time )
-        frame = cv2.resize(frame, (1280, 640))
+        # frame = cv2.resize(frame, (1280, 640))
         cv2.imshow('Final-1-Dis-1', frame)
         
 
