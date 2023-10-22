@@ -1,5 +1,7 @@
 import cv2
 from time import time
+import numpy as np
+import scipy.spatial
 
 
 def show_pixel_location(event, x, y, flags, params):
@@ -43,3 +45,9 @@ def skip_frames(cap, skip_frames: int):
     """
     for _ in range(skip_frames):
         cap.read()
+
+def center(position: tuple[np.ndarray, np.ndarray]) -> np.ndarray[int, int]:
+    return np.array([(position[0][0] + position[1][0]) / 2, (position[0][1] + position[1][1]) / 2], dtype=np.uint32)
+
+def distance(pointA, pointB) -> float:
+    return scipy.spatial.distance.euclidean(pointA, pointB)
