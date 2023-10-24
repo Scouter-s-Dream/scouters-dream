@@ -1,6 +1,5 @@
 import cv2
 import supervision as sv
-from ultralytics.yolo.engine.results import Boxes
 import torch
 
 from sd_heatmap_utils import Qual
@@ -8,6 +7,8 @@ from sd_tracking_utils import SdUtils as sdu
 
 
 def main():
+    print(f'{torch.cuda.is_available()=}')
+
     box_annotator = sv.BoxAnnotator(
         thickness=2,
         text_thickness=1,
@@ -65,11 +66,11 @@ def main():
             result.update(modified_data)
             data.clear()
 
-        detections = sv.Detections.from_yolov8(result)
+        detections = sv.Detections.from_ultralytics(result)
 
         if result.boxes.id is not None:
             detections.tracker_id = sdu.map_tracker_ids(
-                id_to_robot_number, result.boxes.id.cpu().numpy())
+                id_to_robot_number, result.boxes.id.numpy())
 
             for detection, tracker_id in zip(detections.xyxy, detections.tracker_id):
                 x1, y1, x2, y2 = detection
@@ -83,8 +84,8 @@ def main():
                     pass
 
         labels = [
-            f'Robot: {tracker_id} Conf:{confidence:.2f}'
-            for _, confidence, _, tracker_id
+            f'Robot: {tracker_id} Conf: {confidence:.2f}'
+            for _, _, confidence, _, tracker_id
             in detections
         ]
 
