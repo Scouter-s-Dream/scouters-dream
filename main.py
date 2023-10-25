@@ -30,7 +30,7 @@ def main():
 
     source = r'test_videos\dis 1 final 1.mp4'
 
-    for result in model.track(source=source, show=False, stream=True, verbose=False):
+    for idx, result in enumerate(model.track(source=source, show=False, stream=True, verbose=False)):
         frame = result.orig_img
 
         data = []
@@ -41,37 +41,48 @@ def main():
         
         bad_robots = current_ids.difference(legitimate_ids)
         
+        print('===========Number of iteration: %s===========' % idx)
+        
         if legitimate_ids.issubset(current_ids) and bad_robots:
             print('False Positives detected %s' % bad_robots)  
             print(f'Current len: {len(current_ids)}')
 
-            for idx, tensor in range(6):
+            for idx in range(6):
                 try: 
                     data.append(torch.cat((result.boxes.xyxy[idx][0].reshape(1), result.boxes.xyxy[idx][1].reshape(1), result.boxes.xyxy[idx][2].reshape(1), result.boxes.xyxy[idx][3].reshape(1),
                     result.boxes.id[idx].reshape(1), result.boxes.conf[idx].reshape(1), result.boxes.cls[idx].reshape(1))))
                     print(f'Appended Data {data[-1]}')
                 except Exception as e:
                     print(f'Error {e}') 
-                
+                    
+            print('Removed bad Robots')
+            
+            modified_data = torch.stack(data)
+            result.update(modified_data)
+
+            data.clear()
+            bad_robots.clear()
+            
         elif bad_robots:
             print(f'{bad_robots} in result.boxes.id')
-            
+            print(f'{result.boxes.id=}')
             bad_id = bad_robots.pop()            
             
             for i in id_to_robot_number.keys():
                 if torch.tensor(i) not in result.boxes.id:
                     missing_id = i
+                    print(f'{i=}')
                     break
 
-            print("Missing Robot %s" % missing_id)
+            print("Missing Robot id: %s" % missing_id)
 
             for idx, tensor in enumerate(result.boxes.id):
                 try:
                     if torch.tensor(bad_id) == result.boxes.id[idx]:
-                        print("Found %s" % bad_id)
+                        print("Found bad id: %s" % bad_id)
                         data.append(torch.cat((result.boxes.xyxy[idx][0].reshape(1), result.boxes.xyxy[idx][1].reshape(1), result.boxes.xyxy[idx][2].reshape(1), result.boxes.xyxy[idx][3].reshape(1),
                                     torch.tensor([missing_id]).reshape(1), result.boxes.conf[idx].reshape(1), result.boxes.cls[idx].reshape(1))))
-                        print(f'Appended Data {data[-1]}')
+                        print(f'Appended Data Without Bad Id {data[-1]}')
                     else:
                         data.append(torch.cat((result.boxes.xyxy[idx][0].reshape(1), result.boxes.xyxy[idx][1].reshape(1), result.boxes.xyxy[idx][2].reshape(1), result.boxes.xyxy[idx][3].reshape(1),
                                     result.boxes.id[idx].reshape(1), result.boxes.conf[idx].reshape(1), result.boxes.cls[idx].reshape(1))))
@@ -82,8 +93,12 @@ def main():
             modified_data = torch.stack(data)
 
             result.update(modified_data)
+            
             data.clear()
-
+            bad_robots.clear()
+            
+        print(f'Updated ids: {result.boxes.id}')
+            
         detections = sv.Detections.from_ultralytics(result)
 
         if result.boxes.id is not None:
@@ -104,7 +119,7 @@ def main():
         labels = [
             f'Robot: {tracker_id} Conf: {confidence:.2f}'
             for _, _, confidence, _, tracker_id
-            in detections
+             in detections
         ]
 
         frame = box_annotator.annotate(
