@@ -17,11 +17,11 @@ def main():
 
     id_to_robot_number = {
         1: '1943',
-        5: '5990',
-        4: '1577',
-        3: '1576',
         2: '1690',
-        6: '2630'
+        3: '5990',
+        4: '2630',
+        5: '1577',
+        6: '1576'
     }
 
     trajectories = sdu.setup_trajectories(id_to_robot_number)
@@ -34,25 +34,43 @@ def main():
         frame = result.orig_img
 
         data = []
-        missing = -1
+        missing_id = -1
+        
+        legitimate_ids = set(id_to_robot_number.keys())
+        current_ids = set(result.boxes.id.tolist())
+        
+        bad_robots = current_ids.difference(legitimate_ids)
+        
+        if legitimate_ids.issubset(current_ids) and bad_robots:
+            print('False Positives detected %s' % bad_robots)  
+            print(f'Current len: {len(current_ids)}')
 
-        if torch.tensor(7) in result.boxes.id:
-            print('7 in result.boxes.id')
+            for idx, tensor in range(6):
+                try: 
+                    data.append(torch.cat((result.boxes.xyxy[idx][0].reshape(1), result.boxes.xyxy[idx][1].reshape(1), result.boxes.xyxy[idx][2].reshape(1), result.boxes.xyxy[idx][3].reshape(1),
+                    result.boxes.id[idx].reshape(1), result.boxes.conf[idx].reshape(1), result.boxes.cls[idx].reshape(1))))
+                    print(f'Appended Data {data[-1]}')
+                except Exception as e:
+                    print(f'Error {e}') 
+                
+        elif bad_robots:
+            print(f'{bad_robots} in result.boxes.id')
+            
+            bad_id = bad_robots.pop()            
+            
             for i in id_to_robot_number.keys():
                 if torch.tensor(i) not in result.boxes.id:
-                    missing = i
+                    missing_id = i
                     break
 
-            print("Missing Robot %s" % missing)
+            print("Missing Robot %s" % missing_id)
 
             for idx, tensor in enumerate(result.boxes.id):
-                print(f'{idx=}, {tensor=}\n {type(idx)=}, {type(tensor)=}')
-
                 try:
-                    if torch.tensor(7) == result.boxes.id[idx]:
-                        print("Found 7")
+                    if torch.tensor(bad_id) == result.boxes.id[idx]:
+                        print("Found %s" % bad_id)
                         data.append(torch.cat((result.boxes.xyxy[idx][0].reshape(1), result.boxes.xyxy[idx][1].reshape(1), result.boxes.xyxy[idx][2].reshape(1), result.boxes.xyxy[idx][3].reshape(1),
-                                    torch.tensor([missing]).reshape(1), result.boxes.conf[idx].reshape(1), result.boxes.cls[idx].reshape(1))))
+                                    torch.tensor([missing_id]).reshape(1), result.boxes.conf[idx].reshape(1), result.boxes.cls[idx].reshape(1))))
                         print(f'Appended Data {data[-1]}')
                     else:
                         data.append(torch.cat((result.boxes.xyxy[idx][0].reshape(1), result.boxes.xyxy[idx][1].reshape(1), result.boxes.xyxy[idx][2].reshape(1), result.boxes.xyxy[idx][3].reshape(1),
