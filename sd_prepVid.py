@@ -4,7 +4,16 @@ import os
 #I think there is a much better way to do this, but I just scramblem it in case it can be useful
 
 def prepre_video(path: str, resize:tuple[int, int], cutY:tuple[int, int]=None, cutX:tuple[int, int]=None):
-    
+    """`prepare the video pre scouting `
+
+    Args:
+        path (str): path to the original video
+        resize (tuple[int, int]): the new size of the video
+        cutY (tuple[int, int], optional): cut in the Y axis, between the first and last arg of the tuple. Defaults to None.
+        cutX (tuple[int, int], optional): cut in the Y axis, between the first and last arg of the tuple. Defaults to None.
+        
+        `saves the new video to the same path`
+    """
     cap = cv2.VideoCapture(path)
     fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
     
