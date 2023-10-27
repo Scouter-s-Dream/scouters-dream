@@ -6,6 +6,14 @@ class Robot():
     
         
     def __init__(self, number:int, team: bool, position: tuple[np.ndarray[int, int], np.ndarray[int, int]]):
+        """constarctor for the Robot class
+
+        Args:
+            number (int): the robot FRC number 
+            team (bool): the color of the team Blue = True, Red = False
+            position (tuple[np.ndarray[int, int], np.ndarray[int, int]]): tuple of two points of the bounding box of the robot 
+        """
+        
         self.number = number
         if team:
             ROBOT_BLUESIDE.append(self)
@@ -17,8 +25,3 @@ class Robot():
         self.trajectory = []
         self.center = center(position)
         
-    def update_position(self, position: tuple[np.ndarray, np.ndarray]):
-        self.position = position
-        
-    def get_position(self) -> np.ndarray[int, int]:
-        return self.position
