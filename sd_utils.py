@@ -1,11 +1,11 @@
 import cv2
 from time import time
-
+import torch
 
 def show_pixel_location(event, x, y, flags, params):
     """
-    Callback function to display pixel coordinates upon left mouse button click.
-
+    ## Callback function to display pixel coordinates upon left mouse button click.
+    ----
     Args:
     ----
     - event: The event type (e.g., cv2.EVENT_LBUTTONDOWN).
@@ -20,8 +20,8 @@ def show_pixel_location(event, x, y, flags, params):
 
 def show_fps(frame, time_then):
     """
-    Display the frames per second (FPS) on a given frame.
-
+    ## Display the frames per second (FPS) on a given frame.
+    ----
     Args:
     ----
     - frame: The frame to display FPS on.
@@ -34,8 +34,8 @@ def show_fps(frame, time_then):
 
 def skip_frames(cap, skip_frames: int):
     """
-    Skip a specified number of frames in a video capture object.
-    
+    ## Skip a specified number of frames in a video capture object.
+    ----
     Args:
     ----
     - cap: Video capture object.
