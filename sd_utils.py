@@ -43,3 +43,14 @@ def skip_frames(cap, skip_frames: int):
     """
     for _ in range(skip_frames):
         cap.read()
+
+def got_cuda() -> bool:
+    """
+    ## Check if a CUDA-enabled GPU is available for computation using PyTorch.
+    ----
+    Returns:
+    ----
+        - bool: True if a CUDA-enabled GPU is available, False otherwise.
+
+    """
+    return torch.cuda.is_available()
