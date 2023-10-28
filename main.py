@@ -1,13 +1,12 @@
 import cv2
 import supervision as sv
-import torch
 
 from sd_heatmap_utils import Qual
 from sd_tracking_utils import SdUtils as sdu
-
+from sd_utils import got_cuda
 
 def main():
-    print(f'{torch.cuda.is_available()=}')
+    print(f'{got_cuda()=}')
 
     box_annotator = sv.BoxAnnotator(
         thickness=2,
@@ -26,7 +25,7 @@ def main():
 
     trajectories = sdu.setup_trajectories(id_to_robot_number)
 
-    model = sdu.setup_model()
+    model = sdu.setup_model(r"bumper_weights\v4\best (3).pt")
 
     source = r'test_videos\dis 1 final 1.mp4'
 
@@ -35,70 +34,39 @@ def main():
 
         data = []
         missing_id = -1
-        
-        legitimate_ids = set(id_to_robot_number.keys())
-        current_ids = set(result.boxes.id.tolist())
-        
-        bad_robots = current_ids.difference(legitimate_ids)
-        
+
+        legitimate_ids = sdu.get_legitimate_ids(id_to_robot_number)
+        current_ids = sdu.get_current_ids(result)
+
+        bad_robots = sdu.get_bad_robot_ids(current_ids, legitimate_ids)
+
         print('===========Number of iteration: %s===========' % idx)
-        
+
         if legitimate_ids.issubset(current_ids) and bad_robots:
-            print('False Positives detected %s' % bad_robots)  
+            print('False Positives detected %s' % bad_robots)
             print(f'Current len: {len(current_ids)}')
 
-            for idx in range(6):
-                try: 
-                    data.append(torch.cat((result.boxes.xyxy[idx][0].reshape(1), result.boxes.xyxy[idx][1].reshape(1), result.boxes.xyxy[idx][2].reshape(1), result.boxes.xyxy[idx][3].reshape(1),
-                    result.boxes.id[idx].reshape(1), result.boxes.conf[idx].reshape(1), result.boxes.cls[idx].reshape(1))))
-                    print(f'Appended Data {data[-1]}')
-                except Exception as e:
-                    print(f'Error {e}') 
-                    
-            print('Removed bad Robots')
+            data = sdu.remove_false_detections_from_list(data, result)
             
-            modified_data = torch.stack(data)
-            result.update(modified_data)
+            sdu.update_yolo_result(data, result)
 
             data.clear()
             bad_robots.clear()
-            
+
         elif bad_robots:
-            print(f'{bad_robots} in result.boxes.id')
-            print(f'{result.boxes.id=}')
-            bad_id = bad_robots.pop()            
-            
-            for i in id_to_robot_number.keys():
-                if torch.tensor(i) not in result.boxes.id:
-                    missing_id = i
-                    print(f'{i=}')
-                    break
+            missing_id, bad_id = sdu.find_lost_robot_id(bad_robots, result.boxes.id, id_to_robot_number)
 
             print("Missing Robot id: %s" % missing_id)
 
-            for idx, tensor in enumerate(result.boxes.id):
-                try:
-                    if torch.tensor(bad_id) == result.boxes.id[idx]:
-                        print("Found bad id: %s" % bad_id)
-                        data.append(torch.cat((result.boxes.xyxy[idx][0].reshape(1), result.boxes.xyxy[idx][1].reshape(1), result.boxes.xyxy[idx][2].reshape(1), result.boxes.xyxy[idx][3].reshape(1),
-                                    torch.tensor([missing_id]).reshape(1), result.boxes.conf[idx].reshape(1), result.boxes.cls[idx].reshape(1))))
-                        print(f'Appended Data Without Bad Id {data[-1]}')
-                    else:
-                        data.append(torch.cat((result.boxes.xyxy[idx][0].reshape(1), result.boxes.xyxy[idx][1].reshape(1), result.boxes.xyxy[idx][2].reshape(1), result.boxes.xyxy[idx][3].reshape(1),
-                                    result.boxes.id[idx].reshape(1), result.boxes.conf[idx].reshape(1), result.boxes.cls[idx].reshape(1))))
-                        print(f'Appended Data {data[-1]}')
-                except Exception as e:
-                    print(f'Error {e}')
+            data = sdu.process_result_list(result, bad_id, missing_id)
 
-            modified_data = torch.stack(data)
+            sdu.update_yolo_result(data, result)
 
-            result.update(modified_data)
-            
             data.clear()
             bad_robots.clear()
-            
+
         print(f'Updated ids: {result.boxes.id}')
-            
+
         detections = sv.Detections.from_ultralytics(result)
 
         if result.boxes.id is not None:
@@ -119,7 +87,7 @@ def main():
         labels = [
             f'Robot: {tracker_id} Conf: {confidence:.2f}'
             for _, _, confidence, _, tracker_id
-             in detections
+            in detections
         ]
 
         frame = box_annotator.annotate(
