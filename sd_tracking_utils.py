@@ -1,7 +1,7 @@
 from ultralytics import YOLO
+import platform
 from ultralytics.yolo.engine.results import Results
 import torch
-
 
 class SdUtils:
     """
@@ -30,14 +30,15 @@ class SdUtils:
         ## Set up the YOLO model with pre-trained weights.
         -----
         Args:
-            - path (str): A path to the model weights.
         ----
+            - path (str): A path to the model weights.
         Returns:
         ---
            - YOLO: The YOLO model configured with pre-trained weights.
         """
         return YOLO(path)
 
+      
     @staticmethod
     def map_tracker_ids(robot_mapping: dict, id_list: list) -> list:
         """

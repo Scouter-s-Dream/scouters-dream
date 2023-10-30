@@ -3,6 +3,9 @@ import supervision as sv
 
 from sd_heatmap_utils import Qual
 from sd_tracking_utils import SdUtils as sdu
+import platform
+from time import time
+import sd_utils as utils
 from sd_utils import got_cuda
 
 def main():
@@ -95,7 +98,7 @@ def main():
             detections=detections,
             labels=labels
         )
-
+        
         cv2.imshow('Final-1-Dis-1', frame)
 
         if (cv2.waitKey(1) == ord('q')):
@@ -109,5 +112,6 @@ def main():
         id_to_robot_number.values()), pixel_size=10)
 
 
+    
 if __name__ == "__main__":
     main()

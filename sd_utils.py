@@ -1,5 +1,7 @@
 import cv2
 from time import time
+import numpy as np
+import scipy.spatial
 import torch
 
 def show_pixel_location(event, x, y, flags, params):
@@ -44,6 +46,34 @@ def skip_frames(cap, skip_frames: int):
     for _ in range(skip_frames):
         cap.read()
 
+        
+def center(position: tuple[np.ndarray, np.ndarray]) -> np.ndarray[int, int]:
+    """`finds the center of a rectangle.`
+
+    Args:
+        position (tuple[np.ndarray, np.ndarray]): points of the bounding rect (leftTop and rightBottom).
+
+    Returns:
+        np.ndarray[int, int]: the center of the rectangle.
+    """
+    x_center = (position[0][0] + position[1][0]) / 2
+    y_center = (position[0][1] + position[1][1]) / 2
+    return np.array([x_center, y_center], dtype=np.uint32)
+
+
+def distance(pointA: np.ndarray, pointB:np.ndarray) -> float:
+    """calculates the distance between two points.
+
+    Args:
+        pointA (np.ndarray): the first 2D point.
+        pointB (np.ndarray): the seconds 2D point.   
+
+    Returns:
+        float: the distance between the two points.
+    """
+    return scipy.spatial.distance.euclidean(pointA, pointB)
+  
+  
 def got_cuda() -> bool:
     """
     ## Check if a CUDA-enabled GPU is available for computation using PyTorch.
