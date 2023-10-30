@@ -2,12 +2,12 @@ import cv2
 from time import time
 import numpy as np
 import scipy.spatial
-
+import torch
 
 def show_pixel_location(event, x, y, flags, params):
     """
-    Callback function to display pixel coordinates upon left mouse button click.
-
+    ## Callback function to display pixel coordinates upon left mouse button click.
+    ----
     Args:
     ----
     - event: The event type (e.g., cv2.EVENT_LBUTTONDOWN).
@@ -22,8 +22,8 @@ def show_pixel_location(event, x, y, flags, params):
 
 def show_fps(frame, time_then):
     """
-    Display the frames per second (FPS) on a given frame.
-
+    ## Display the frames per second (FPS) on a given frame.
+    ----
     Args:
     ----
     - frame: The frame to display FPS on.
@@ -36,8 +36,8 @@ def show_fps(frame, time_then):
 
 def skip_frames(cap, skip_frames: int):
     """
-    Skip a specified number of frames in a video capture object.
-    
+    ## Skip a specified number of frames in a video capture object.
+    ----
     Args:
     ----
     - cap: Video capture object.
@@ -46,6 +46,7 @@ def skip_frames(cap, skip_frames: int):
     for _ in range(skip_frames):
         cap.read()
 
+        
 def center(position: tuple[np.ndarray, np.ndarray]) -> np.ndarray[int, int]:
     """`finds the center of a rectangle.`
 
@@ -71,3 +72,15 @@ def distance(pointA: np.ndarray, pointB:np.ndarray) -> float:
         float: the distance between the two points.
     """
     return scipy.spatial.distance.euclidean(pointA, pointB)
+  
+  
+def got_cuda() -> bool:
+    """
+    ## Check if a CUDA-enabled GPU is available for computation using PyTorch.
+    ----
+    Returns:
+    ----
+        - bool: True if a CUDA-enabled GPU is available, False otherwise.
+
+    """
+    return torch.cuda.is_available()
