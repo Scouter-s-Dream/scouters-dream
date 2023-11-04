@@ -1,6 +1,4 @@
 import numpy as np
-from sd_robot import Robot
-from sd_gamePiece import GamePiece
 
 GRID_POSITION_HIGH:tuple[np.ndarray[int, int], np.ndarray[int, int]] = (np.array([0, 0]), np.array(0, 0))
 
@@ -12,10 +10,10 @@ RED_COMMUNITY_POSITION:tuple[np.ndarray[int, int], np.ndarray[int, int]] = ()
 
 BLUE_COMMUNITY_POSITION:tuple[np.ndarray[int, int], np.ndarray[int, int]] = ()
 
-GAMEPIECE_REDSIDE:list[GamePiece] = []
+GAMEPIECE_REDSIDE = []
 
-GAMEPIECE_BLUESIDE:list[GamePiece] = []
+GAMEPIECE_BLUESIDE = []
 
-ROBOT_REDSIDE:list[Robot] = []
+ROBOT_REDSIDE = []
 
-ROBOT_BLUESIDE:list[Robot] = []
+ROBOT_BLUESIDE = []
