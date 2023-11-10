@@ -43,7 +43,6 @@ Args:
 Returns:
  - `squareDistance (int)` -> the distance between the points.
 */
-template<typename T1, typename T2>
-double squareDistance(T1 *pointA, T2 *pointB){
+double squareDistance(int *pointA, int *pointB){
     return pow(pointA[0] - pointB[0], 2) + pow(pointA[1] - pointB[1], 2);
 }

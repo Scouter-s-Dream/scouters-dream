@@ -9,7 +9,7 @@ that help communicate with the cpp program
 import numpy as np
 import ctypes
 
-lib = ctypes.CDLL('./build/libmain.so')
+lib = ctypes.CDLL('build/libmain.so')
 
 def c_short(int: int):
     return ctypes.c_int16(int)

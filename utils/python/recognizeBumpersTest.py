@@ -7,7 +7,7 @@ from tracker import Tracker
 #TEST CODE DONT TAKE SERIOUSLY
 
 cap = cv2.VideoCapture('/home/sagi/Downloads/dcmp.mp4')
-modelBumpers = YOLO('data/BumperWeights.pt')
+modelBumpers = YOLO('bumper_weights/v4/best (3).pt')
 
 while cap.isOpened():
     
@@ -23,7 +23,6 @@ while cap.isOpened():
             boxes = r.boxes.cpu().numpy()
             xywhWithCls = np.concatenate((boxes.xywh, np.reshape(boxes.cls, (boxes.cls.shape[0], 1))), 1)       
             s = np.array(xywhWithCls[xywhWithCls[:, 0].argsort()], dtype=np.int32)
-            
             tracker.setTrackPoints(r)
             
             for r in s:

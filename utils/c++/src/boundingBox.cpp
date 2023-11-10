@@ -85,7 +85,7 @@ Returns:
  - `squareDistance (int)` -> the distance to the BoundingBox.
 */
 double BoundingBox::squareDistanceTo(BoundingBox boundingBox){
-    return squareDistance<int, int>(this->center, boundingBox.getCenter());
+    return squareDistance(this->center, boundingBox.getCenter());
 }
 
 /*

@@ -3,11 +3,10 @@
 
 #include <opencv4/opencv2/opencv.hpp>
 #include <stdio.h>
-#include "robot.hpp"
 
 using cv::Mat, cv::VideoCapture;
 
-void skipFrames(VideoCapture cap, short int framesToSkip);
+void skipFrames(VideoCapture cap, short framesToSkip);
 
 Mat filterRed(Mat frame);
 

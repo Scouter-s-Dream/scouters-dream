@@ -10,7 +10,6 @@ double max(Mat frame);
 
 double min(Mat frame);
 
-template<typename T1, typename T2>
-double squareDistance(T1 *pointA, T2 *pointB);
+double squareDistance(int* pointA, int* pointB);
 
 #endif
