@@ -5,6 +5,7 @@
 #include <opencv4/opencv2/opencv.hpp>
 #include <iostream>
 #include <memory>
+#include <vector>
 
 class BoundingBox{
 
@@ -41,8 +42,8 @@ class BoundingBox{
 
 };
 
-std::shared_ptr<BoundingBox[]> pointsToBoundingBoxes(int *pointsWithClass, int size);
+std::vector<BoundingBox> pointsToBoundingBoxes(int *pointsWithClass, int size);
 
-void avrageBoundingBoxes(BoundingBox dest, std::shared_ptr<BoundingBox[]> boundingBoxes, int startLoc, int stopLoc);
+void avrageBoundingBoxes(BoundingBox dest, std::vector<BoundingBox> boundingBoxes, int startLoc, int stopLoc);
 
 #endif 

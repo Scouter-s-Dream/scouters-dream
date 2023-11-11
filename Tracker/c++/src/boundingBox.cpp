@@ -123,12 +123,12 @@ Avrages BoundingBoxes center from an array of BoundingBoxes.
 -
 Args: 
  - `dest (BoundingBox)` -> Output to the avraged BoundingBox.
- - `boundingBoxes (shared_ptr<BoundingBoxes[]>)` -> Shared_ptr the BoundingBox array.
+ - `boundingBoxes (vector<BoundingBox)` -> the vector of the BoundingBoxes.
  - `startLoc (int)` -> The location in the array to start avrage.
  - `stopLoc (int)` -> The location in the array to stop avrage 
 
 */
-void avrageBoundingBoxes(BoundingBox dest, std::shared_ptr<BoundingBox[]> boundingBoxes, int startLoc, int stopLoc){
+void avrageBoundingBoxes(BoundingBox dest, std::vector<BoundingBox> boundingBoxes, int startLoc, int stopLoc){
 
     int x = 0, y = 0, w = 0, h = 0;
     for (int i = startLoc; i < stopLoc + 1; i++){
@@ -153,14 +153,16 @@ Args:
 Returns:
  - `boundingBoxes (shared_ptr<BoundingBox[]>)` -> shared_ptr to the array of BoundingBoxes.
 */
-std::shared_ptr<BoundingBox[]> pointsToBoundingBoxes(int *pointsWithClass, int size){
+std::vector<BoundingBox> pointsToBoundingBoxes(int *pointsWithClass, int size){
 	
-	std::shared_ptr<BoundingBox[]> boundingBoxes(new BoundingBox[size]);
+	std::vector<BoundingBox> boundingBoxes;
+    boundingBoxes.reserve(size);
+
 	int pointWithClass[5]; //[x y w h Class] 
 
 	for (int i = 0; i < size; i++){
 		memcpy(&pointWithClass[0], &pointsWithClass[i*5], 5 * sizeof(int));
-        boundingBoxes[i] = BoundingBox(pointWithClass, i);
+        boundingBoxes.emplace_back(pointWithClass, i);
 	}
     
 	return boundingBoxes;

@@ -95,8 +95,8 @@ void Tracker::stablePoints(){
 
 	int *similar = this->findSimilarBoundingBoxes();
 	int constant = 0;
-	this->stableBoundingBoxes = std::make_unique<BoundingBox[]>(this->numOfCurrentBoundingBoxes);
-
+	this->stableBoundingBoxes.reserve(this->numOfCurrentBoundingBoxes);
+	
 	for (int real = 0, size = this->numOfCurrentBoundingBoxes, reduced = similar[size]; real < size - reduced; real++){
 		if (real == similar[real] + constant){
 			avrageBoundingBoxes(this->stableBoundingBoxes[real], this->currentBoundingBoxes, similar[real] + constant, similar[real+1] + constant);

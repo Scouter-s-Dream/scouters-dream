@@ -21,7 +21,7 @@ file(GLOB all_SRCS
         )
 
         
-# add_library( ${PROJECT_NAME} SHARED ${all_SRCS})
-add_executable(  ${PROJECT_NAME} ${all_SRCS})
-        
+add_library( ${PROJECT_NAME} SHARED ${all_SRCS})
+# add_executable(  ${PROJECT_NAME} ${all_SRCS})
+         
 target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS})

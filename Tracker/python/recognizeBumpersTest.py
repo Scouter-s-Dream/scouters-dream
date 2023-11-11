@@ -5,15 +5,12 @@ import time
 from tracker import Tracker
 
 #TEST CODE DONT TAKE SERIOUSLY
-
+print("loading")
 cap = cv2.VideoCapture('/home/sagi/Downloads/dcmp.mp4')
 modelBumpers = YOLO('bumper_weights/v4/best (3).pt')
-
 while cap.isOpened():
-    
     tracker = Tracker()
     success, frame = cap.read()
-    
     if success:
         frame = cv2.resize(frame, (640, 640))
         frame = frame[150:400]
