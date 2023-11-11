@@ -113,4 +113,28 @@ void Tracker::stablePoints(){
 	delete[] similar;
 }
 
+void Tracker::track(){
 	
+	/*
+		Tracker psudo code:
+
+			
+			get bounding boxes and the img the were in at the start.
+
+			for each of the new bounding boxes
+				make predictions to the other boundingboxes based on
+
+					position
+					velocity
+					color
+					last seen of lost bounding boxes
+					size of boundingbox
+
+			determine predictions.
+
+			set ids to the new points
+
+	*/
+
+
+}	

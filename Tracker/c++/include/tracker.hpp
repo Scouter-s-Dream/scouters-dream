@@ -24,6 +24,8 @@ class Tracker{
 
         void stablePoints();
 
+        void track();
+
 };
 
 
