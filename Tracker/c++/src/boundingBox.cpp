@@ -7,7 +7,6 @@ BoundingBox default constractor.
 -
 */
 BoundingBox::BoundingBox(){
-    this->id = -1;
 }
 
 /*
@@ -17,10 +16,8 @@ Args:
  - `pointWithClass (int[])` -> xywh point with class [x, y, w, h, c].
  - `id (int)` -> Represents that id of the BoundingBox.
 */
-BoundingBox::BoundingBox(int *pointWithClass, int id){
-    this-> id = id;
+BoundingBox::BoundingBox(int *pointWithClass){
     this->setBox(pointWithClass);
-    this->type = (char) pointWithClass[4];
 }
 
 /*
@@ -43,9 +40,7 @@ Prints the parameters of the BoundingBox.
 -
 */
 void BoundingBox::print(){
-    cout << "id " << this->id << "\n"; 
     cout << "x " << this->box[0] << " y " << this->box[1] << " w " << this->box[2] << " h " << this->box[3] << "\n"; //[x, y, w, h]
-    cout << "type " << this->type << "\n";
     cout << "area " << this->area << "\n";
     cout << "perimeter " << this->perimeter << "\n";
     cout << "center " << *this->center << "\n";
@@ -59,13 +54,6 @@ int* BoundingBox::getBox(){
     return this->box;
 }
 
-/*
-Returns The class of the BoundingBox.
--
-*/
-char BoundingBox::getClass(){
-    return this->type;
-}
 
 /*
 Returns The center of the BoundingBox.

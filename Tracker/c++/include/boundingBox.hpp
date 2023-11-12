@@ -11,9 +11,7 @@ class BoundingBox{
 
     private:
 
-        int id; 
         int box[4]; //[x, y, w, h]
-        char type; 
         int area;
         int perimeter;
         int center[2];
@@ -21,13 +19,11 @@ class BoundingBox{
     public:
 
         BoundingBox();
-        BoundingBox(int *pointWithClasses, int id);
+        BoundingBox(int *pointWithClasses);
                 
         void setBox(int *pointWithClasses);
 
         int* getBox();
-
-        char getClass();
 
         int* getCenter();
 
