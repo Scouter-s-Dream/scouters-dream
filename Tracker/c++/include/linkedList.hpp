@@ -3,26 +3,28 @@
 
 #include "boundingBox.hpp"
 
-using std::unique_ptr;
-//May be added more stuff 
-typedef struct Node{
+typedef struct Node Node;
+
+struct Node{
     
     BoundingBox boundingBox;
     struct Node *next;
 
 };
 
+Node* NodeConstractor(BoundingBox boundingBox);
+
 class LinkedList{
 
     //First item
     public: 
-        unique_ptr<Node> start;
-        unique_ptr<Node> end;
+        Node start;
+        Node end;
         unsigned int length = 0;
 
         LinkedList();
 
-        LinkedList(Node node);
+        LinkedList(Node *heapNode);
 
         Node getItem(unsigned int index);
 
