@@ -29,6 +29,9 @@ void Tracker::setTrackPoints(int *pointsWithClass, int size){
 	cout << "Created\n"; 
 }
 
+
+//TODO More Advenced func, need to know how to use 
+//CURRENTLY NOT WORKING!
 /*
 Finds points that are close together
 -
@@ -38,59 +41,63 @@ Returns:
 - `All points between LocA and locB are similar.`
 
 */
-int* Tracker::findSimilarBoundingBoxes(){
+// int* Tracker::findSimilarBoundingBoxes(){
 	
-	unsigned short reduced = 0;
-	unsigned short index = 0;
-	const int distance = 150;
-	int* similar = new int[this->numOfCurrentBoundingBoxes + 1]; // [locA, locB, locA, locB] (locA and locB are similar).
+// 	unsigned short reduced = 0;
+// 	unsigned short index = 0;
+// 	const int distance = 150;
+// 	int* similar = new int[this->numOfCurrentBoundingBoxes + 1]; // [locA, locB, locA, locB] (locA and locB are similar).
 
-	for (int i = 0, size = this->numOfCurrentBoundingBoxes; i < size ; i++){
+// 	for (int i = 0, size = this->numOfCurrentBoundingBoxes; i < size ; i++){
 		
-		similar[i] = size + 1; 
+// 		similar[i] = size + 1; 
 
-		if (this->currentBoundingBoxes[i].isCloseTo(this->currentBoundingBoxes[i+1], distance) && this->currentBoundingBoxes[i].getClass() == this->currentBoundingBoxes[i+1].getClass()){
+// 		if (this->currentBoundingBoxes[i].isCloseTo(this->currentBoundingBoxes[i+1], distance)){
 
-			similar[index] = i;
-			similar[index + 1] = i + 1;
+// 			similar[index] = i;
+// 			similar[index + 1] = i + 1;
 
-			for (int k = i + 1; k < size - i -1 ; k++){
+// 			for (int k = i + 1; k < size - i -1 ; k++){
 
-				if (this->currentBoundingBoxes[k].isCloseTo(this->currentBoundingBoxes[k+1], distance) && this->currentBoundingBoxes[k].getClass() == this->currentBoundingBoxes[k+1].getClass() && this->currentBoundingBoxes[i].isCloseTo(this->currentBoundingBoxes[i+1], (distance-50) * (k-i+1.5)) && this->currentBoundingBoxes[i].getClass() == this->currentBoundingBoxes[i+1].getClass()){
+// 				if (this->currentBoundingBoxes[k].isCloseTo(this->currentBoundingBoxes[k+1], distance) && this->currentBoundingBoxes[i].isCloseTo(this->currentBoundingBoxes[i+1], (distance-50) * (k-i+1.5))){
 					
-					similar[index + 1] = k + 1;
+// 					similar[index + 1] = k + 1;
 
-					if (k == size - i - 1){ //last time
-						reduced += k-i;
-					}
+// 					if (k == size - i - 1){ //last time
+// 						reduced += k-i;
+// 					}
 
-				}
-				else{
-					reduced += k - i;
-					i += k - i - 1;
-					break;
-				}
+// 				}
+// 				else{
+// 					reduced += k - i;
+// 					i += k - i - 1;
+// 					break;
+// 				}
 
 
-			}
+// 			}
 			
-			index+=2;
+// 			index+=2;
 
-		}
+// 		}
 
 
-	}
+// 	}
 
-	similar[this->numOfCurrentBoundingBoxes] = reduced;
+// 	similar[this->numOfCurrentBoundingBoxes] = reduced;
 
-	return similar;
+// 	return similar;
 
-}
+// }
 
 /*
 Stables the BoundingBoxes that are stored in stableBoundingBoxes
 -
 */
+
+
+
+
 void Tracker::stablePoints(){
 
 	int *similar = this->findSimilarBoundingBoxes();
