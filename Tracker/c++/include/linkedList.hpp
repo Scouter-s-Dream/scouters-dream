@@ -18,8 +18,8 @@ class LinkedList{
 
     //First item
     public: 
-        Node start;
-        Node end;
+        Node* start;
+        Node* end;
         unsigned int length = 0;
 
         LinkedList();
