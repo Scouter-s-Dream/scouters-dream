@@ -3,8 +3,6 @@
 
 #include "boundingBox.hpp"
 #include "linkedList.hpp"
-using std::vector;
-
 
 class Entity{
 
@@ -14,6 +12,14 @@ class Entity{
         short velocity;
         BoundingBox boundingBox;
         LinkedList trajectory;
+
+    Entity(unsigned short id, char type, BoundingBox box);
+    
+    void setBox(BoundingBox boundingBox);
+
+    void setVelocity();
+
+    void addToTrajectory();    
 
 };
 
