@@ -27,7 +27,7 @@ Node LinkedList::getItem(unsigned int index){
 
     Node* ref = this->start;
 
-    for (int i = 0; i < index; i++){
+    for (unsigned int i = 0; i < index; i++){
         ref = ref->next;
     }
 
@@ -60,7 +60,7 @@ void LinkedList::remove(unsigned int index){
 
     }
 
-    for (int i = 0; ref != nullptr && i < index - 1; i++){
+    for (unsigned int i = 0; ref != nullptr && i < index - 1; i++){
         ref = ref->next;
     }
 

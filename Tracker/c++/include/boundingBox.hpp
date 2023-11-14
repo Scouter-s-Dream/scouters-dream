@@ -4,7 +4,6 @@
 #include "mathUtils.hpp"
 #include <opencv4/opencv2/opencv.hpp>
 #include <iostream>
-#include <memory>
 #include <vector>
 
 class BoundingBox{
