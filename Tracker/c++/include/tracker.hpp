@@ -4,24 +4,29 @@
 #include "boundingBox.hpp"
 #include <memory>
 #include <vector>
+#include <opencv2/opencv.hpp>
+#include "entity.hpp"
 
 class Tracker{
     
     public:
-
-        std::vector<BoundingBox> stableBoundingBoxes;
-        std::vector<BoundingBox> lastStableBoundingBoxes;
-        std::vector<BoundingBox> currentBoundingBoxes;
-        int numOfStableBoundingBoxes = 0;
-        int numOfLastStableBoundingBoxes = 0;
-        int numOfCurrentBoundingBoxes = 0;
+        cv::Mat img;
+        int width;
+        int height;
+        std::vector<Entity> lastEntities;
+        std::vector<Entity> currentEntities;
 
         Tracker();
 
-        void setTrackPoints(int *pointsWithClass, int size);
+        Tracker(int* pointsWithClass, int size, int* img, int width, int height);
 
+        void setTrackPoints(int* pointsWithClass, int size);
+
+        void setImg(int* img);
 
         int* findSimilarBoundingBoxes();
+
+        std::vector<Entity> boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, int* pointsWithClass);
 
         void stablePoints();
 

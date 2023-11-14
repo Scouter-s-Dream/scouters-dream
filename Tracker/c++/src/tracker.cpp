@@ -1,9 +1,4 @@
-#include <opencv4/opencv2/opencv.hpp>
-#include <stdio.h>
-#include "vectorFuncs.hpp"
-#include "mathUtils.hpp"
 #include "tracker.hpp"
-#include "boundingBox.hpp"
 
 using std::cout, std::endl;
 
@@ -15,17 +10,41 @@ Tracker::Tracker(){
 	
 }
 
+Tracker::Tracker(int* pointsWithClass, int size, int* img, int width, int height){
+	this->width = width;
+	this->height = height;
+	setTrackPoints(pointsWithClass, size);
+	setImg(img);
+}
+
+void Tracker::setImg(int* img){
+	this->img = cv::Mat(width, height, CV_8UC3, img);
+}
+
+std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, int* pointsWithClass){
+	
+	std::vector<Entity> entities;
+    entities.reserve(boundingBoxes.size());
+
+	for (unsigned int i = 0, size = boundingBoxes.size(); i < size; i++){
+        entities.emplace_back(i, (char) pointsWithClass[5*i + 4], boundingBoxes[i]);
+	}
+    //TODO switch magic numbers or give them explenations
+	return entities;
+}
+
 /*
 Sets the current BoundingBoxes of the tracker
 -
 Args: 
- - `pointsWithClass (int[])` -> SORTED xywh points with classes [x, y, w, h, c].
+ - `pointsWithClass (int[])` -> xywh points with classes [x, y, w, h, c].
  - `size (int)` -> How many points are in the array (Size of the array / size of a point).
 */
 void Tracker::setTrackPoints(int *pointsWithClass, int size){
 
-	this-> numOfCurrentBoundingBoxes = size;
-	this->currentBoundingBoxes = pointsToBoundingBoxes(pointsWithClass, size); //sets the currentStableStack inside stablePoints.
+	this->lastEntities = this->currentEntities;
+	this->currentEntities = boundingBoxesToEntites(pointsToBoundingBoxes(pointsWithClass, size), pointsWithClass); //sets the currentStableStack inside stablePoints.
+	
 	cout << "Created\n"; 
 }
 
@@ -41,8 +60,8 @@ Returns:
 - `All points between LocA and locB are similar.`
 
 */
-// int* Tracker::findSimilarBoundingBoxes(){
-	
+int* Tracker::findSimilarBoundingBoxes(){return new int(0);}
+
 // 	unsigned short reduced = 0;
 // 	unsigned short index = 0;
 // 	const int distance = 150;
@@ -98,27 +117,27 @@ Stables the BoundingBoxes that are stored in stableBoundingBoxes
 
 
 
-void Tracker::stablePoints(){
+void Tracker::stablePoints(){}
 
-	int *similar = this->findSimilarBoundingBoxes();
-	int constant = 0;
-	this->stableBoundingBoxes.reserve(this->numOfCurrentBoundingBoxes);
+// 	int *similar = this->findSimilarBoundingBoxes();
+// 	int constant = 0;
+// 	this->stableBoundingBoxes.reserve(this->numOfCurrentBoundingBoxes);
 	
-	for (int real = 0, size = this->numOfCurrentBoundingBoxes, reduced = similar[size]; real < size - reduced; real++){
-		if (real == similar[real] + constant){
-			avrageBoundingBoxes(this->stableBoundingBoxes[real], this->currentBoundingBoxes, similar[real] + constant, similar[real+1] + constant);
-			constant += (similar[real+1] - similar[real]);
-		}
-		else{
-			this->stableBoundingBoxes[real].setBox(this->currentBoundingBoxes[real + constant].getBox());
-		}
+// 	for (int real = 0, size = this->numOfCurrentBoundingBoxes, reduced = similar[size]; real < size - reduced; real++){
+// 		if (real == similar[real] + constant){
+// 			avrageBoundingBoxes(this->stableBoundingBoxes[real], this->currentBoundingBoxes, similar[real] + constant, similar[real+1] + constant);
+// 			constant += (similar[real+1] - similar[real]);
+// 		}
+// 		else{
+// 			this->stableBoundingBoxes[real].setBox(this->currentBoundingBoxes[real + constant].getBox());
+// 		}
 		
-	}
+// 	}
 	
-	this->numOfLastStableBoundingBoxes = this->numOfStableBoundingBoxes;
-	this-> numOfStableBoundingBoxes = this->numOfCurrentBoundingBoxes - similar[this->numOfCurrentBoundingBoxes];
-	delete[] similar;
-}
+// 	this->numOfLastStableBoundingBoxes = this->numOfStableBoundingBoxes;
+// 	this-> numOfStableBoundingBoxes = this->numOfCurrentBoundingBoxes - similar[this->numOfCurrentBoundingBoxes];
+// 	delete[] similar;
+// }
 
 void Tracker::track(){
 	
