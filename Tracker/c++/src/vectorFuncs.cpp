@@ -1,10 +1,18 @@
-#include <stdio.h>
-#include "cnpy.h"
-#include <iostream>
-#include <stdexcept>
-#include <cmath>
+#include "vectorFuncs.hpp"
 
 using std::vector;
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& vector){
+    // Printing all the elements
+    // using <<
+    os << "[";
+    for (auto element : vector) {
+        os << element << " ";
+    }
+    os << "\b]";
+    return os;
+}
 
 vector<vector<int>> vector1Dto2D(vector<int> input, vector<size_t> newShape){
 
