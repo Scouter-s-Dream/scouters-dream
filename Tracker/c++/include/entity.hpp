@@ -2,7 +2,6 @@
 #define __ENTITY__HPP__
 
 #include "boundingBox.hpp"
-#include <vector>
 #include "linkedList.hpp"
 using std::vector;
 
