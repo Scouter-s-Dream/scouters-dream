@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 import cv2
 import numpy as np
-import time
+from time import time
 from tracker import Tracker
 
 #TEST CODE DONT TAKE SERIOUSLY
@@ -20,8 +20,9 @@ while cap.isOpened():
             boxes = r.boxes.cpu().numpy()
             xywhWithCls = np.concatenate((boxes.xywh, np.reshape(boxes.cls, (boxes.cls.shape[0], 1))), 1)       
             s = np.array(xywhWithCls[xywhWithCls[:, 0].argsort()], dtype=np.int32)
+            t = time()
             tracker.setTrackPoints(r)
-            
+            print(time() - t)
             for r in s:
                 if r[4] == 0:
                     frame = cv2.rectangle(frame, r[:2] - r[2:4]//2, r[:2] + r[2:4]//2, (0, 255 ,255), 1)    
