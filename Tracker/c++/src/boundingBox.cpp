@@ -146,7 +146,7 @@ std::vector<BoundingBox> pointsToBoundingBoxes(int *points, int size){
     boundingBoxes.reserve(size);
 
 	for (int i = 0; i < size; i++){
-        boundingBoxes.emplace_back(points + i*4);
+        boundingBoxes.emplace_back(points + i*5);
 	}
     
 	return boundingBoxes;
