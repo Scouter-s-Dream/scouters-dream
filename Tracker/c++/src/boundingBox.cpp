@@ -13,8 +13,7 @@ BoundingBox::BoundingBox(){
 BoundingBox constractor.
 -
 Args:
- - `pointWithClass (int[])` -> xywh point with class [x, y, w, h, c].
- - `id (int)` -> Represents that id of the BoundingBox.
+ - `pointWithClass (int[])` -> xywh point with class [x, y, w, h].
 */
 BoundingBox::BoundingBox(int *pointWithClass){
     this->setBox(pointWithClass);
@@ -24,14 +23,14 @@ BoundingBox::BoundingBox(int *pointWithClass){
 Sets the box and other parameters of the BoundingBox.
 -
 Args:
- - `pointWithClass (int[])` -> xywh point with class [x, y, w, h, c].
+ - `pointWithClass (int[])` -> xywh point with class [x, y, w, h].
 */
-void BoundingBox::setBox(int *pointWithClass){
+void BoundingBox::setBox(int *point){
 
-    memcpy(this->box, pointWithClass, 4 * sizeof(int));
-    this->area = pointWithClass[2] * pointWithClass[3]; //w * h
+    memcpy(this->box, point, 4 * sizeof(int));
+    this->area = point[2] * point[3]; //w * h
 
-    this->perimeter = 2 * (pointWithClass[2] + pointWithClass[3]);
+    this->perimeter = 2 * (point[2] + point[3]);
     
 }
 
@@ -135,22 +134,19 @@ void avrageBoundingBoxes(BoundingBox dest, std::vector<BoundingBox> boundingBoxe
 Turn long int[] of points with classes into BoundingBoxes.
 -
 Args: 
- - `pointsWithClass (int[])` -> SORTED xywh points with classes [x, y, w, h, c].
+ - `points (int[])` -> SORTED xywh points with classes [x, y, w, h].
  - `size (int)` -> How many points are in the array (Size of the array / size of a point).
 
 Returns:
- - `boundingBoxes (shared_ptr<BoundingBox[]>)` -> shared_ptr to the array of BoundingBoxes.
+ - `boundingBoxes (vector<BoundingBoxes>)` -> shared_ptr to the array of BoundingBoxes.
 */
-std::vector<BoundingBox> pointsToBoundingBoxes(int *pointsWithClass, int size){
+std::vector<BoundingBox> pointsToBoundingBoxes(int *points, int size){
 	
 	std::vector<BoundingBox> boundingBoxes;
     boundingBoxes.reserve(size);
 
-	int pointWithClass[5]; //[x y w h Class] 
-
 	for (int i = 0; i < size; i++){
-		memcpy(&pointWithClass[0], &pointsWithClass[i*5], 5 * sizeof(int));
-        boundingBoxes.emplace_back(pointWithClass, i);
+        boundingBoxes.emplace_back(points + i*4);
 	}
     
 	return boundingBoxes;
