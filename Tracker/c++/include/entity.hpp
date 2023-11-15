@@ -9,7 +9,8 @@ class Entity{
     private:
         unsigned short id;
         char type;
-        short velocity;
+        short velocityX;
+        short velocityY;
         BoundingBox boundingBox;
         LinkedList trajectory;
 
