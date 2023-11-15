@@ -1,10 +1,11 @@
 #include "linkedList.hpp"
 
-Node* NodeConstractor(BoundingBox boundingBox, unsigned short velocity){
+Node* NodeConstractor(BoundingBox boundingBox, short velocityX, short velocityY){
 
     //TODO Turn into const, sizof is just a useless clac because it's const
     Node* newNode = (Node*) malloc(sizeof(Node));
-    newNode->velocity = velocity;
+    newNode->velocityX = velocityX;
+    newNode->velocityY = velocityY;
     newNode->boundingBox = boundingBox;
     newNode->next = nullptr;
     return newNode;
@@ -22,8 +23,8 @@ LinkedList::LinkedList(){
     this->end = newNode;
 }
 
-LinkedList::LinkedList(BoundingBox boundingBox, unsigned short velocity){
-    Node* newNode = NodeConstractor(boundingBox, velocity);
+LinkedList::LinkedList(BoundingBox boundingBox, short velocityX, short velocityY){
+    Node* newNode = NodeConstractor(boundingBox, velocityX, velocityY);
     this->start = newNode;
     this->end = newNode;
 }
@@ -49,8 +50,8 @@ Node LinkedList::getItem(unsigned int index){
 
 }
 
-void LinkedList::append(BoundingBox boundingBox, unsigned short velocity){
-    Node* newNode = NodeConstractor(boundingBox, velocity); 
+void LinkedList::append(BoundingBox boundingBox, short velocityX, short velocityY){
+    Node* newNode = NodeConstractor(boundingBox, velocityX, velocityY); 
     this->end->next = newNode;    
     this->end = newNode;
     this->length++;
@@ -81,28 +82,28 @@ void LinkedList::remove(unsigned int index){
     
 }
 
-void LinkedList::prepend(BoundingBox boundingBox, unsigned short velocity){
-    Node* newNode = NodeConstractor(boundingBox, velocity); 
+void LinkedList::prepend(BoundingBox boundingBox, short velocityX, short velocityY){
+    Node* newNode = NodeConstractor(boundingBox, velocityX, velocityY); 
     newNode->next = this->start;    
     this->start = newNode;
     this->length++;
 }
 
-void LinkedList::insert(unsigned int index, BoundingBox boundingBox, unsigned short velocity){
+void LinkedList::insert(unsigned int index, BoundingBox boundingBox, short velocityX, short velocityY){
     if (index > this->length || index < 0){
         throw "Out of Bounds";
     }
 
-    Node* newNode = NodeConstractor(boundingBox, velocity); 
+    Node* newNode = NodeConstractor(boundingBox, velocityX, velocityY); 
 
     Node* ref = this->start;
 
     if (index == 0){
-        this->prepend(boundingBox, velocity);
+        this->prepend(boundingBox, velocityX, velocityY);
     }
     
     if (index == this->length){
-        this->append(boundingBox, velocity);
+        this->append(boundingBox, velocityX, velocityY);
     }
 
     for (unsigned int i = 0; ref != nullptr && i < index - 1; i++){

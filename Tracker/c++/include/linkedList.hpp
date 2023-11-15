@@ -7,13 +7,14 @@ typedef struct Node Node;
 
 struct Node{
     
-    unsigned short velocity;
+    short velocityX;
+    short velocityY;
     BoundingBox boundingBox;
     struct Node *next;
 
 };
 
-Node* NodeConstractor(BoundingBox boundingBox, unsigned short velocity);
+Node* NodeConstractor(BoundingBox boundingBox, short velocityX, short velocityY);
 
 Node* emptyNode();
 
@@ -28,17 +29,17 @@ class LinkedList{
 
         LinkedList(Node Node);
 
-        LinkedList(BoundingBox boundingBox, unsigned short velocity);
+        LinkedList(BoundingBox boundingBox, short velocityX, short velocityY);
 
         Node getItem(unsigned int index);
 
-        void append(BoundingBox boundingBox, unsigned short velocity);
+        void append(BoundingBox boundingBox, short velocityX, short velocityY);
 
         void remove(unsigned int index);
 
-        void prepend(BoundingBox boundingBox, unsigned short velocity);
+        void prepend(BoundingBox boundingBox, short velocityX, short velocityY);
 
-        void insert(unsigned int index, BoundingBox boundingBox, unsigned short velocity);
+        void insert(unsigned int index, BoundingBox boundingBox, short velocityX, short velocityY);
 
         ~LinkedList(); //TODO create destructor that frees all the list.
 
