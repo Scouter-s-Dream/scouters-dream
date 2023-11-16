@@ -14,5 +14,5 @@ void Entity::setBox(BoundingBox boundingBox){
 }
 
 void Entity::addToTrajectory(){
-    this->trajectory.append(this->boundingBox, this->velocity);
+    this->trajectory.append(this->boundingBox, this->velocityX, this->velocityY);
 }

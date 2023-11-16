@@ -4,9 +4,11 @@
 #include "boundingBox.hpp"
 #include "linkedList.hpp"
 
+
 class Entity{
 
     private:
+        bool visualize = false;
         unsigned short id;
         char type;
         short velocityX;
@@ -14,13 +16,15 @@ class Entity{
         BoundingBox boundingBox;
         LinkedList trajectory;
 
-    Entity(unsigned short id, char type, BoundingBox box);
-    
-    void setBox(BoundingBox boundingBox);
+    public:
 
-    void setVelocity();
+        Entity(unsigned short id, char type, BoundingBox box);
+        
+        void setBox(BoundingBox boundingBox);
 
-    void addToTrajectory();    
+        void setVelocity();
+
+        void addToTrajectory();    
 
 };
 
