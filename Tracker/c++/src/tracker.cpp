@@ -23,12 +23,9 @@ void Tracker::setImg(uint8_t* img){
 	cout << this->cols << "cols\n";
 	this->img = cv::Mat(this->rows, this->cols, CV_8UC3, img);
 	for (int i = 0; i < 9; i++){
-		cout << img[i] << " ";
+		cout << (int) img[i] << " ";
 	}
-	cout << "\n";
-	for (int i = 0; i < 9; i++){
-		cout << this->img.at<uchar>({0, i}) << " ";
-	}
+	cout<< this->img << "\n";
 	// cv::cvtColor(this->img, this->img, cv::COLOR_BGRA2BGR);
 }
 

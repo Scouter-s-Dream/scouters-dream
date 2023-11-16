@@ -6,11 +6,13 @@ from tracker import Tracker
 
 #TEST CODE DONT TAKE SERIOUSLY
 print("loading")
-cap = cv2.VideoCapture('/home/sagi/Downloads/dcmp.mp4')
+cap = cv2.VideoCapture('test_videos/dis 1 final 1.mp4')
 modelBumpers = YOLO('bumper_weights/v4/best (3).pt')
 
 success, frame = cap.read()
-    
+
+print(success)
+
 if success:
     
     frame = cv2.resize(frame, (640, 640))
@@ -18,12 +20,12 @@ if success:
     resultsB = modelBumpers(frame, verbose=False)
     tracker = Tracker(resultsB[0], frame, True) 
     print(frame)   
+    
 while cap.isOpened():
     success, frame = cap.read()
 
     tracker.track()
     
-    cv2.waitKey(0)
     
     # if success:
     #     frame = cv2.resize(frame, (640, 640))

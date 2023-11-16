@@ -14,7 +14,7 @@ class Tracker():
         xywhWithCls = np.concatenate((boxes.xywh, np.reshape(boxes.cls, (boxes.cls.shape[0], 1))), 1)       
         points = np.array(xywhWithCls[xywhWithCls[:, 0].argsort()], dtype=np.int32).flatten()
 
-        self.obj = cpp.lib._Tracker(points, cpp.c_int(len(points)//point_size), np.array(img.flatten(), dtype=np.uint8), cpp.c_int(img.shape[1]), cpp.c_int(img.shape[0]), cpp.c_bool(visualize))
+        self.obj = cpp.lib._Tracker(points, cpp.c_int(len(points)//point_size), np.array(img.flatten(), dtype=np.uint8), cpp.c_int(img.shape[0]), cpp.c_int(img.shape[1]), cpp.c_bool(visualize))
         
     def setFuncs(self):
         
