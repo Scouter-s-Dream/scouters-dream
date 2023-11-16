@@ -25,6 +25,8 @@ class Tracker():
         
         cpp.lib._track.argtypes = [cpp.object]
         
+        cpp.lib._setImg.argtypes = [cpp.object, cpp.uint8_t_array]
+        
     def setTrackPoints(self, YOLO_result):
         """
         Sets the current BoundingBoxes of the tracker
@@ -40,7 +42,7 @@ class Tracker():
         cpp.lib._setTrackPoints(self.obj, points, cpp.c_int(len(points)//point_size))
     
     def setImg(self, coloredImg: np.ndarray):
-        pass
+        cpp.lib._setImg(self.obj, np.array(coloredImg.flatten(), dtype=np.uint8))
     
     def track(self):
         cpp.lib._track(self.obj)
