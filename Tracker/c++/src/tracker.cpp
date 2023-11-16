@@ -19,14 +19,9 @@ Tracker::Tracker(int* pointsWithClass, int size, uint8_t* img, int rows, int col
 }
 
 void Tracker::setImg(uint8_t* img){
-	cout << this->rows << "rows\n";
-	cout << this->cols << "cols\n";
-	this->img = cv::Mat(this->rows, this->cols, CV_8UC3, img);
-	for (int i = 0; i < 9; i++){
-		cout << (int) img[i] << " ";
-	}
-	cout<< this->img << "\n";
-	// cv::cvtColor(this->img, this->img, cv::COLOR_BGRA2BGR);
+	cout << "SetImg\n";
+	this->img = cv::Mat(this->rows, this->cols, CV_8UC3, img);	
+	// cv::cvtColor(this->img, this->img, cv::COLOR_BGR2GRAY);
 }
 
 std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, int* pointsWithClass){
@@ -152,8 +147,9 @@ void Tracker::track(){
 	cout << this->visualize << "\n";
 
 	if (this->visualize){
+		cout << "v\n"; 
 		cv::imshow("frame", this->img);
-		cv::waitKey(0);
+		cv::waitKey(1);
 	}
 
 	/*
