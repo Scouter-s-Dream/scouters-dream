@@ -10,19 +10,20 @@
 class Tracker{
     
     public:
+        bool visualize;
         cv::Mat img;
-        int width;
-        int height;
+        int rows;
+        int cols;
         std::vector<Entity> lastEntities;
         std::vector<Entity> currentEntities;
 
         Tracker();
 
-        Tracker(int* pointsWithClass, int size, int* img, int width, int height);
+        Tracker(int* pointsWithClass, int size, uint8_t* img, int rows, int cols, bool visualize);
 
         void setTrackPoints(int* pointsWithClass, int size);
 
-        void setImg(int* img);
+        void setImg(uint8_t* img);
 
         int* findSimilarBoundingBoxes();
 

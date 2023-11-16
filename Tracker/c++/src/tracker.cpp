@@ -10,22 +10,33 @@ Tracker::Tracker(){
 	
 }
 
-Tracker::Tracker(int* pointsWithClass, int size, int* img, int width, int height){
-	this->width = width;
-	this->height = height;
+Tracker::Tracker(int* pointsWithClass, int size, uint8_t* img, int rows, int cols, bool visualize){
+	this->visualize = visualize;
+	this->rows = rows;
+	this->cols = cols;
 	setTrackPoints(pointsWithClass, size);
 	setImg(img);
 }
 
-void Tracker::setImg(int* img){
-	this->img = cv::Mat(width, height, CV_8UC3, img);
+void Tracker::setImg(uint8_t* img){
+	cout << this->rows << "rows\n";
+	cout << this->cols << "cols\n";
+	this->img = cv::Mat(this->rows, this->cols, CV_8UC3, img);
+	for (int i = 0; i < 9; i++){
+		cout << img[i] << " ";
+	}
+	cout << "\n";
+	for (int i = 0; i < 9; i++){
+		cout << this->img.at<uchar>({0, i}) << " ";
+	}
+	// cv::cvtColor(this->img, this->img, cv::COLOR_BGRA2BGR);
 }
 
 std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, int* pointsWithClass){
 	
 	std::vector<Entity> entities;
     entities.reserve(boundingBoxes.size());
-
+	
 	for (unsigned int i = 0, size = boundingBoxes.size(); i < size; i++){
         entities.emplace_back(i, (char) pointsWithClass[5*i + 4], boundingBoxes[i]);
 	}
@@ -141,6 +152,13 @@ void Tracker::stablePoints(){}
 
 void Tracker::track(){
 	
+	cout << this->visualize << "\n";
+
+	if (this->visualize){
+		cv::imshow("frame", this->img);
+		cv::waitKey(0);
+	}
+
 	/*
 		Tracker psudo code:
 
