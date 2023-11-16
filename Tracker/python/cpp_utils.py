@@ -43,7 +43,13 @@ int = ctypes.c_int32
 
 long = ctypes.c_int64
 
+bool = ctypes.c_bool
+
+uint8_t_array = np.ctypeslib.ndpointer(dtype=np.uint8, ndim=1, flags='C_CONTIGUOUS') 
+
 short_array = np.ctypeslib.ndpointer(dtype=np.int16, ndim=1, flags='C_CONTIGUOUS') 
+
+ushort_array = np.ctypeslib.ndpointer(dtype=np.uint16, ndim=1, flags='C_CONTIGUOUS')
 
 int_array = np.ctypeslib.ndpointer(dtype=np.int32, ndim=1, flags='C_CONTIGUOUS')
 
