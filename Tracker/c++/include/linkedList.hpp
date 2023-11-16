@@ -41,7 +41,7 @@ class LinkedList{
 
         void insert(unsigned int index, BoundingBox boundingBox, short velocityX, short velocityY);
 
-        ~LinkedList(); //TODO create destructor that frees all the list.
+        // ~LinkedList(); //TODO create destructor that frees all the list.
 
 };
 
