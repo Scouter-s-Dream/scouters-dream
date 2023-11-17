@@ -16,3 +16,11 @@ void Entity::setBox(BoundingBox boundingBox){
 void Entity::addToTrajectory(){
     this->trajectory.append(this->boundingBox, this->velocityX, this->velocityY);
 }
+
+BoundingBox* Entity::getBoundingBox(){
+    return &this->boundingBox;
+}
+
+unsigned short Entity::getId(){
+    return this->id;
+}

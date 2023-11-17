@@ -8,6 +8,7 @@
 class Entity{
 
     private:
+
         bool visualize = false;
         unsigned short id;
         char type;
@@ -21,6 +22,10 @@ class Entity{
         Entity(unsigned short id, char type, BoundingBox box);
         
         void setBox(BoundingBox boundingBox);
+
+        BoundingBox* getBoundingBox();
+
+        unsigned short getId();
 
         void setVelocity();
 
