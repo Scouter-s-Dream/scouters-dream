@@ -3,14 +3,14 @@
 
 #include "boundingBox.hpp"
 #include "linkedList.hpp"
-
+#include <limits>
 
 class Entity{
 
     private:
 
         bool visualize = false;
-        unsigned short id;
+        uint16_t id;
         char type;
         short velocityX;
         short velocityY;
@@ -19,17 +19,23 @@ class Entity{
 
     public:
 
-        Entity(unsigned short id, char type, BoundingBox box);
+        Entity(uint16_t id, char type, BoundingBox box);
         
         void setBox(BoundingBox boundingBox);
 
         BoundingBox* getBoundingBox();
 
-        unsigned short getId();
+        uint16_t getId();
+
+        void setId(uint16_t id);
 
         void setVelocity();
 
         void addToTrajectory();    
+
+        int squareDistanceTo(Entity &e);
+
+        Entity* findClosest(std::vector<Entity>  entityVector);
 
 };
 
