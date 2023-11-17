@@ -22,9 +22,7 @@ Tracker::Tracker(int* pointsWithClass, int size, uint8_t* img, int rows, int col
 }
 
 void Tracker::setImg(uint8_t* img){
-	cout << "SetImg\n";
 	this->img = cv::Mat(this->rows, this->cols, CV_8UC3, img);	
-	// cv::cvtColor(this->img, this->img, cv::COLOR_BGR2GRAY);
 }
 
 std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, int* pointsWithClass){
@@ -32,7 +30,7 @@ std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> bou
 	std::vector<Entity> entities;
     entities.reserve(boundingBoxes.size());
 	
-	for (unsigned int i = 0, size = boundingBoxes.size(); i < size; i++){
+	for (uint16_t i = 0, size = boundingBoxes.size(); i < size; i++){
         entities.emplace_back(i, (char) pointsWithClass[5*i + 4], boundingBoxes[i]);
 	}
     //TODO switch magic numbers or give them explenations
@@ -50,12 +48,10 @@ void Tracker::setTrackPoints(int *pointsWithClass, int size){
 
 	this->lastEntities = this->currentEntities;
 	this->currentEntities = boundingBoxesToEntites(pointsToBoundingBoxes(pointsWithClass, size), pointsWithClass); //sets the currentStableStack inside stablePoints.
-	
-	cout << "Created\n"; 
 }
 
 void Tracker::drawBoundingBoxes(){
-	for (unsigned int i = 0; i < this->currentEntities.size(); i++){
+	for (uint16_t i = 0, size = this->currentEntities.size(); i < size; i++){
 		int x = this->currentEntities[i].getBoundingBox()->getBox()[0] - this->currentEntities[i].getBoundingBox()->getBox()[2] / 2;
 		int y = this->currentEntities[i].getBoundingBox()->getBox()[1] - this->currentEntities[i].getBoundingBox()->getBox()[3] / 2;
 		int w = this->currentEntities[i].getBoundingBox()->getBox()[2];
@@ -80,8 +76,8 @@ Returns:
 */
 int* Tracker::findSimilarBoundingBoxes(){return new int(0);}
 
-// 	unsigned short reduced = 0;
-// 	unsigned short index = 0;
+// 	uint16_t reduced = 0;
+// 	uint16_t index = 0;
 // 	const int distance = 150;
 // 	int* similar = new int[this->numOfCurrentBoundingBoxes + 1]; // [locA, locB, locA, locB] (locA and locB are similar).
 
@@ -157,12 +153,18 @@ void Tracker::stablePoints(){}
 // 	delete[] similar;
 // }
 
-void Tracker::track(){
+void Tracker::track(int* pointsWithClasses, int size, uint8_t* img){
 	
-	cout << this->visualize << "\n";
+	setTrackPoints(pointsWithClasses, size);
+	setImg(img);
 
+	uint16_t minSize = std::min(this->currentEntities.size(), this->lastEntities.size());
+	for (uint16_t i = 0; i < minSize; i++){
+		Entity *temp = this->lastEntities[i].findClosest(this->currentEntities);
+		this->currentEntities[i].setId(temp->getId());
+	}
+	
 	if (this->visualize){
-		cout << "v\n"; 
 		this->drawBoundingBoxes();
 		cv::imshow("frame", this->img);
 		cv::waitKey(1);

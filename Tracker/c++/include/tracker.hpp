@@ -33,9 +33,9 @@ class Tracker{
 
         void stablePoints();
 
-        void track();
+        void track(int* pointsWithClasses, int size, uint8_t* img);
 
-};
+};  
 
 
 #endif
