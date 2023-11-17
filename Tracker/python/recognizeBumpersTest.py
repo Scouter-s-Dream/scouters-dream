@@ -17,6 +17,7 @@ if success:
     
     frame = cv2.resize(frame, (640, 640))
     frame = frame[150:400]
+    frame = cv2.resize(frame, (1280, 500))
     resultsB = modelBumpers(frame, verbose=False)
     tracker = Tracker(resultsB[0], frame, True) 
     print(frame)   
@@ -29,6 +30,7 @@ while cap.isOpened():
     if success:
         frame = cv2.resize(frame, (640, 640))
         frame = frame[150:400]
+        frame = cv2.resize(frame, (1280, 500))
         t = time()
         resultsB = modelBumpers(frame, verbose=False)
         print("t", time() - t)
