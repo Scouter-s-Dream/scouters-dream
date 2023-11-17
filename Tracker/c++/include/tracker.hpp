@@ -25,6 +25,8 @@ class Tracker{
 
         void setImg(uint8_t* img);
 
+        void drawBoundingBoxes();
+        
         int* findSimilarBoundingBoxes();
 
         std::vector<Entity> boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, int* pointsWithClass);

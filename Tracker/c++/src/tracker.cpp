@@ -1,4 +1,7 @@
 #include "tracker.hpp"
+#include <string>
+#include <sstream>
+#include <iostream>
 
 using std::cout, std::endl;
 
@@ -51,6 +54,18 @@ void Tracker::setTrackPoints(int *pointsWithClass, int size){
 	cout << "Created\n"; 
 }
 
+void Tracker::drawBoundingBoxes(){
+	for (unsigned int i = 0; i < this->currentEntities.size(); i++){
+		int x = this->currentEntities[i].getBoundingBox()->getBox()[0] - this->currentEntities[i].getBoundingBox()->getBox()[2] / 2;
+		int y = this->currentEntities[i].getBoundingBox()->getBox()[1] - this->currentEntities[i].getBoundingBox()->getBox()[3] / 2;
+		int w = this->currentEntities[i].getBoundingBox()->getBox()[2];
+		int h = this->currentEntities[i].getBoundingBox()->getBox()[3];
+		cv::Rect2i rect(x, y, w, h);
+		cv::rectangle(this->img, rect, CV_RGB(255, 0, 0), 2);
+		cv::Point2i centerPoint(this->currentEntities[i].getBoundingBox()->getBox()[0], this->currentEntities[i].getBoundingBox()->getBox()[1]);
+		cv::putText(this->img, std::to_string(this->currentEntities[i].getId()), centerPoint, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255), 2);
+	}
+}
 
 //TODO More Advenced func, need to know how to use 
 //CURRENTLY NOT WORKING!
@@ -148,6 +163,7 @@ void Tracker::track(){
 
 	if (this->visualize){
 		cout << "v\n"; 
+		this->drawBoundingBoxes();
 		cv::imshow("frame", this->img);
 		cv::waitKey(1);
 	}
