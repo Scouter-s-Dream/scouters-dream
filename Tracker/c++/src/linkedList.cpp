@@ -34,7 +34,7 @@ LinkedList::LinkedList(Node node){ //node needs to be alocated on the heap!
     this->end = &node;
 }
 
-Node LinkedList::getItem(unsigned int index){
+Node LinkedList::getItem(uint16_t index){
 
     if (index > this->length || index < 0){
         throw "Out of Bounds";
@@ -42,7 +42,7 @@ Node LinkedList::getItem(unsigned int index){
 
     Node* ref = this->start;
 
-    for (unsigned int i = 0; i < index; i++){
+    for (uint16_t i = 0; i < index; i++){
         ref = ref->next;
     }
 
@@ -57,7 +57,7 @@ void LinkedList::append(BoundingBox boundingBox, short velocityX, short velocity
     this->length++;
 }
 
-void LinkedList::remove(unsigned int index){
+void LinkedList::remove(uint16_t index){
     
     if (index > this->length || index < 0){
         throw "Out of Bounds";
@@ -71,7 +71,7 @@ void LinkedList::remove(unsigned int index){
         return;
     }
 
-    for (unsigned int i = 0; ref != nullptr && i < index - 1; i++){
+    for (uint16_t i = 0; ref != nullptr && i < index - 1; i++){
         ref = ref->next;
     }
 
@@ -89,7 +89,7 @@ void LinkedList::prepend(BoundingBox boundingBox, short velocityX, short velocit
     this->length++;
 }
 
-void LinkedList::insert(unsigned int index, BoundingBox boundingBox, short velocityX, short velocityY){
+void LinkedList::insert(uint16_t index, BoundingBox boundingBox, short velocityX, short velocityY){
     if (index > this->length || index < 0){
         throw "Out of Bounds";
     }
@@ -106,7 +106,7 @@ void LinkedList::insert(unsigned int index, BoundingBox boundingBox, short veloc
         this->append(boundingBox, velocityX, velocityY);
     }
 
-    for (unsigned int i = 0; ref != nullptr && i < index - 1; i++){
+    for (uint16_t i = 0; ref != nullptr && i < index - 1; i++){
         ref = ref->next;
     }
 

@@ -23,7 +23,7 @@ class LinkedList{
     public: 
         Node* start;
         Node* end;
-        unsigned int length = 0;
+        uint16_t length = 0;
 
         LinkedList();
 
@@ -31,15 +31,15 @@ class LinkedList{
 
         LinkedList(BoundingBox boundingBox, short velocityX, short velocityY);
 
-        Node getItem(unsigned int index);
+        Node getItem(uint16_t index);
 
         void append(BoundingBox boundingBox, short velocityX, short velocityY);
 
-        void remove(unsigned int index);
+        void remove(uint16_t index);
 
         void prepend(BoundingBox boundingBox, short velocityX, short velocityY);
 
-        void insert(unsigned int index, BoundingBox boundingBox, short velocityX, short velocityY);
+        void insert(uint16_t index, BoundingBox boundingBox, short velocityX, short velocityY);
 
         // ~LinkedList(); //TODO create destructor that frees all the list.
 
