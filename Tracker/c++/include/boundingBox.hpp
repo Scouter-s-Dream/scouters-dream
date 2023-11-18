@@ -39,8 +39,8 @@ class BoundingBox{
 
 };
 
-std::vector<BoundingBox> pointsToBoundingBoxes(uint *pointsWithClass, uint size);
+std::vector<BoundingBox> pointsToBoundingBoxes(uint16_t *pointsWithClass, uint16_t size);
 
-void avrageBoundingBoxes(BoundingBox dest, std::vector<BoundingBox> boundingBoxes, uint startLoc, uint stopLoc);
+void avrageBoundingBoxes(BoundingBox dest, std::vector<BoundingBox> boundingBoxes, uint8_t startLoc, uint8_t stopLoc);
 
 #endif 

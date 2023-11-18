@@ -66,7 +66,7 @@ Returns:
  - `squareDistance (uint)` -> the distance to the BoundingBox.
 */
 uint BoundingBox::squareDistanceTo(BoundingBox boundingBox){
-    return squareDistance<uint>(this->getCenter(), boundingBox.getCenter());
+    return squareDistance(this->getCenter(), boundingBox.getCenter());
 }
 
 /*
@@ -107,23 +107,23 @@ Args:
  - `stopLoc (uint)` -> The location in the array to stop avrage 
 
 */
-void avrageBoundingBoxes(BoundingBox dest, std::vector<BoundingBox> boundingBoxes, uint startLoc, uint stopLoc){
+void avrageBoundingBoxes(BoundingBox dest, std::vector<BoundingBox> boundingBoxes, uint8_t startLoc, uint8_t stopLoc){
 
     uint16_t x = 0, y = 0, w = 0, h = 0;
-    for (uint i = startLoc; i < stopLoc + 1; i++){
+    for (uint8_t i = startLoc; i < stopLoc + 1; i++){
         x += boundingBoxes[i].getBox()[0];
         y += boundingBoxes[i].getBox()[1];
         w += boundingBoxes[i].getBox()[2];
         h += boundingBoxes[i].getBox()[3];
     }
     uint16_t times = stopLoc - startLoc + 1;
-    uint16_t out[4] = {x/times, y/times, w/times, h/times};
+    uint16_t out[4] = {static_cast<uint16_t>(x /times), static_cast<uint16_t>(y /times), static_cast<uint16_t>(w /times), static_cast<uint16_t>(h /times)};
 
     dest.setBox(out);
 }
 
 /*
-Turn long uint[] of points with classes into BoundingBoxes.
+Turn uint[] of points with classes into BoundingBoxes.
 -
 Args: 
  - `points (uint[])` -> SORTED xywh points with classes [x, y, w, h].
@@ -132,13 +132,13 @@ Args:
 Returns:
  - `boundingBoxes (vector<BoundingBoxes>)` -> shared_ptr to the array of BoundingBoxes.
 */
-std::vector<BoundingBox> pointsToBoundingBoxes(uint16_t* points, uint size){
+std::vector<BoundingBox> pointsToBoundingBoxes(uint16_t *pointsWithClass, uint16_t size){
 	
 	std::vector<BoundingBox> boundingBoxes;
     boundingBoxes.reserve(size);
 
 	for (uint i = 0; i < size; i++){
-        boundingBoxes.emplace_back(points + i*5);
+        boundingBoxes.emplace_back(pointsWithClass + i*5);
 	}
     
 	return boundingBoxes;
