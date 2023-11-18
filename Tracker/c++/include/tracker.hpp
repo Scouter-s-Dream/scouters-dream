@@ -10,30 +10,28 @@
 class Tracker{
     
     public:
-        bool visualize;
+        const bool visualize;
+        const uint rows;
+        const uint cols;
         cv::Mat img;
-        int rows;
-        int cols;
         std::vector<Entity> lastEntities;
         std::vector<Entity> currentEntities;
 
-        Tracker();
+        Tracker(uint* pointsWithClass, uint size, uint8_t* img, uint rows, uint cols, bool visualize);
 
-        Tracker(int* pointsWithClass, int size, uint8_t* img, int rows, int cols, bool visualize);
-
-        void setTrackPoints(int* pointsWithClass, int size);
+        void setTrackPoints(uint16_t* pointsWithClass, uint size);
 
         void setImg(uint8_t* img);
 
         void drawBoundingBoxes();
         
-        int* findSimilarBoundingBoxes();
+        uint* findSimilarBoundingBoxes();
 
-        std::vector<Entity> boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, int* pointsWithClass);
+        std::vector<Entity> boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, uint* pointsWithClass);
 
         void stablePoints();
 
-        void track(int* pointsWithClasses, int size, uint8_t* img);
+        void track(uint16_t* pointsWithClasses, uint size, uint8_t* img);
 
 };  
 

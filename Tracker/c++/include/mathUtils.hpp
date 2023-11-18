@@ -1,15 +1,13 @@
 #ifndef __MATH_UTILS__HPP_
-#define __MATH_UTILS_HPP_
+#define __MATH_UTILS__HPP_
 
-#include <opencv4/opencv2/opencv.hpp>
 #include <stdio.h>
+#include <cmath>
+#include <vector>
 
-using cv::Mat;
+using std::vector;
 
-double max(Mat frame);
-
-double min(Mat frame);
-
-double squareDistance(int* pointA, int* pointB);
+template<typename T>
+T squareDistance(vector<T> pointA, vector<T> pointB);
 
 #endif

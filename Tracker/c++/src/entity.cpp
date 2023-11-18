@@ -1,9 +1,6 @@
 #include "entity.hpp"
 
-Entity::Entity(uint16_t id, char type, BoundingBox boundingBox){
-    
-    this->id = id;
-    this-> type = type;
+Entity::Entity(uint16_t id, uint type, BoundingBox boundingBox) : id(id), type(type){
     this->setBox(boundingBox);
     this->trajectory = LinkedList();
     
@@ -14,22 +11,18 @@ void Entity::setBox(BoundingBox boundingBox){
 }
 
 void Entity::addToTrajectory(){
-    this->trajectory.append(this->boundingBox, this->velocityX, this->velocityY);
+    this->trajectory.append(this->boundingBox, this->velocities);
 }
 
 BoundingBox* Entity::getBoundingBox(){
     return &this->boundingBox;
 }
 
-uint16_t Entity::getId(){
+const uint16_t Entity::getId(){
     return this->id;
 }
 
-void Entity::setId(uint16_t id){
-    this->id = id;
-}
-
-int Entity::squareDistanceTo(Entity &e){
+uint Entity::squareDistanceTo(Entity &e){
     return this->getBoundingBox()->squareDistanceTo(*(e.getBoundingBox()));
 }
 

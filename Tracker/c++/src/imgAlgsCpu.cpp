@@ -12,7 +12,7 @@ Args:
 void skipFrames(VideoCapture cap, short framesToSkip){
 
 	Mat blank;
-	for (int i = 0; i < framesToSkip; i++){
+	for (uint i = 0; i < framesToSkip; i++){
 		cap.read(blank);
 	}
 
@@ -53,7 +53,6 @@ Returns:
 */
 Mat filterBlue(Mat frame){
 
-	
 	Mat filtered;
 
 	cv::GaussianBlur(frame, filtered, {5, 5}, 1, 1);
