@@ -11,13 +11,19 @@ import ctypes
 
 lib = ctypes.CDLL('build/libmain.so')
 
-def c_short(int: int):
+def c_int16(int: int):
     return ctypes.c_int16(int)
+
+def c_uint16(int: int):
+    return ctypes.c_uint16(int)
  
-def c_int(int: int):
+def c_int32(int: int):
     return ctypes.c_int32(int)
 
-def c_long(int: int):
+def c_uint32(int: int):
+    return ctypes.c_uint32(int)
+
+def c_int64(int: int):
     return ctypes.c_int64(int)
 
 def c_string(string: str):
@@ -37,23 +43,25 @@ def c_bool(bool: bool):
 
 object = ctypes.POINTER(ctypes.c_char)
     
-short = ctypes.c_int16
+int16 = ctypes.c_int16
 
-int = ctypes.c_int32
+uint16 = ctypes.c_uint16
 
-long = ctypes.c_int64
+int32 = ctypes.c_int32
+
+int64 = ctypes.c_int64
 
 bool = ctypes.c_bool
 
-uint8_t_array = np.ctypeslib.ndpointer(dtype=np.uint8, ndim=1, flags='C_CONTIGUOUS') 
+uint8_array = np.ctypeslib.ndpointer(dtype=np.uint8, ndim=1, flags='C_CONTIGUOUS') 
 
-short_array = np.ctypeslib.ndpointer(dtype=np.int16, ndim=1, flags='C_CONTIGUOUS') 
+uint16_array = np.ctypeslib.ndpointer(dtype=np.uint16, ndim=1, flags='C_CONTIGUOUS') 
 
-ushort_array = np.ctypeslib.ndpointer(dtype=np.uint16, ndim=1, flags='C_CONTIGUOUS')
+int16_array = np.ctypeslib.ndpointer(dtype=np.int16, ndim=1, flags='C_CONTIGUOUS') 
 
-int_array = np.ctypeslib.ndpointer(dtype=np.int32, ndim=1, flags='C_CONTIGUOUS')
+int32_array = np.ctypeslib.ndpointer(dtype=np.int32, ndim=1, flags='C_CONTIGUOUS')
 
-long_array = np.ctypeslib.ndpointer(dtype=np.int64, ndim=1, flags='C_CONTIGUOUS')
+int64_array = np.ctypeslib.ndpointer(dtype=np.int64, ndim=1, flags='C_CONTIGUOUS')
 
 double_array = np.ctypeslib.ndpointer(dtype=np.double, ndim=1, flags='C_CONTIGUOUS')
 
