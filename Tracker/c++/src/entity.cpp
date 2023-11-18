@@ -1,6 +1,6 @@
 #include "entity.hpp"
 
-Entity::Entity(uint16_t id, uint type, BoundingBox boundingBox) : id(id), type(type){
+Entity::Entity(uint16_t id, uint16_t type, BoundingBox boundingBox) : id(id), type(type){
     this->setBox(boundingBox);
     this->trajectory = LinkedList();
     
@@ -14,8 +14,8 @@ void Entity::addToTrajectory(){
     this->trajectory.append(this->boundingBox, this->velocities);
 }
 
-BoundingBox* Entity::getBoundingBox(){
-    return &this->boundingBox;
+BoundingBox Entity::getBoundingBox(){
+    return this->boundingBox;
 }
 
 const uint16_t Entity::getId(){
@@ -23,12 +23,12 @@ const uint16_t Entity::getId(){
 }
 
 uint Entity::squareDistanceTo(Entity &e){
-    return this->getBoundingBox()->squareDistanceTo(*(e.getBoundingBox()));
+    return this->getBoundingBox().squareDistanceTo(e.getBoundingBox());
 }
 
-Entity* Entity::findClosest(std::vector<Entity> entityVector){
+Entity Entity::findClosest(std::vector<Entity> entityVector){
     
-    int distance = std::numeric_limits<int>::max();
+    uint16_t distance = UINT16_MAX;
     uint16_t idx = entityVector.size() + 1; // not in array.
 
     for (uint16_t i = 0, size = entityVector.size(); i < size; i++){
@@ -39,5 +39,5 @@ Entity* Entity::findClosest(std::vector<Entity> entityVector){
         }
     }
 
-    return &entityVector[idx];
+    return entityVector[idx];
 }

@@ -3,7 +3,7 @@
 
 extern "C"{
 
-    Tracker* _Tracker(uint* pointsWithClass, uint size, uint8_t* img, uint rows, uint cols, bool visualize){
+    Tracker* _Tracker(uint16_t* pointsWithClass, uint16_t size, uint8_t* img, uint16_t rows, uint16_t cols, bool visualize){
         return new Tracker(pointsWithClass, size, img, rows, cols, visualize);
     }
 
@@ -15,7 +15,7 @@ extern "C"{
         t -> setTrackPoints(pointsWithClasses, size);
     }
 
-    void _track(Tracker *t, uint16_t* pointsWithClasses, uint size, uint8_t* img){
+    void _track(Tracker *t, uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
         t -> track(pointsWithClasses, size, img);
     }
 

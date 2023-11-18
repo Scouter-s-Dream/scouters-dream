@@ -5,24 +5,24 @@
 
 using std::cout, std::endl;
 
-Tracker::Tracker(uint* pointsWithClass, uint size, uint8_t* img, uint rows, uint cols, bool visualize) 
+Tracker::Tracker(uint16_t* pointsWithClass, uint16_t size, uint8_t* img, uint16_t rows, uint16_t cols, bool visualize) 
 	: visualize(visualize), rows(rows), cols(cols){
-
 	setTrackPoints(pointsWithClass, size);
 	setImg(img);
+	this->entitys = vector<Entity>(this->currentEntities);
 }
 
 void Tracker::setImg(uint8_t* img){
 	this->img = cv::Mat(this->rows, this->cols, CV_8UC3, img);	
 }
 
-std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, uint* pointsWithClass){
+std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, uint16_t* pointsWithClass){
 	
 	std::vector<Entity> entities;
     entities.reserve(boundingBoxes.size());
 	
 	for (uint16_t i = 0, size = boundingBoxes.size(); i < size; i++){
-        entities.emplace_back(i, (char) pointsWithClass[5*i + 4], boundingBoxes[i]);
+        entities.emplace_back(i, pointsWithClass[5*i + 4], boundingBoxes[i]);
 	}
     //TODO switch magic numbers or give them explenations
 	return entities;
@@ -35,21 +35,19 @@ Args:
  - `pointsWithClass (uint[])` -> xywh points with classes [x, y, w, h, c].
  - `size (uint)` -> How many points are in the array (Size of the array / size of a point).
 */
-void Tracker::setTrackPoints(uint16_t *pointsWithClass, uint size){
-
-	this->lastEntities = this->currentEntities;
+void Tracker::setTrackPoints(uint16_t *pointsWithClass, uint16_t size){
 	this->currentEntities = boundingBoxesToEntites(pointsToBoundingBoxes(pointsWithClass, size), pointsWithClass); //sets the currentStableStack inside stablePoints.
 }
 
 void Tracker::drawBoundingBoxes(){
 	for (uint16_t i = 0, size = this->currentEntities.size(); i < size; i++){
-		uint x = this->currentEntities[i].getBoundingBox()->getBox()[0] - this->currentEntities[i].getBoundingBox()->getBox()[2] / 2;
-		uint y = this->currentEntities[i].getBoundingBox()->getBox()[1] - this->currentEntities[i].getBoundingBox()->getBox()[3] / 2;
-		uint w = this->currentEntities[i].getBoundingBox()->getBox()[2];
-		uint h = this->currentEntities[i].getBoundingBox()->getBox()[3];
+		uint16_t x = this->currentEntities[i].getBoundingBox().getBox()[0] - this->currentEntities[i].getBoundingBox().getBox()[2] / 2;
+		uint16_t y = this->currentEntities[i].getBoundingBox().getBox()[1] - this->currentEntities[i].getBoundingBox().getBox()[3] / 2;
+		uint16_t w = this->currentEntities[i].getBoundingBox().getBox()[2];
+		uint16_t h = this->currentEntities[i].getBoundingBox().getBox()[3];
 		cv::Rect2i rect(x, y, w, h);
 		cv::rectangle(this->img, rect, CV_RGB(255, 0, 0), 2);
-		cv::Point2i centerPoint(this->currentEntities[i].getBoundingBox()->getBox()[0], this->currentEntities[i].getBoundingBox()->getBox()[1]);
+		cv::Point2i centerPoint(this->currentEntities[i].getBoundingBox().getBox()[0], this->currentEntities[i].getBoundingBox().getBox()[1]);
 		cv::putText(this->img, std::to_string(this->currentEntities[i].getId()), centerPoint, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255), 2);
 	}
 }
@@ -144,7 +142,7 @@ void Tracker::stablePoints(){}
 // 	delete[] similar;
 // }
 
-void Tracker::track(uint16_t* pointsWithClasses, uint size, uint8_t* img){
+void Tracker::track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
 	
 	setTrackPoints(pointsWithClasses, size);
 	setImg(img);

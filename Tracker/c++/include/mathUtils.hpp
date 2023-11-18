@@ -1,13 +1,13 @@
 #ifndef __MATH_UTILS__HPP_
 #define __MATH_UTILS__HPP_
 
-#include <stdio.h>
-#include <cmath>
+#include <iostream>
 #include <vector>
+#include <cmath>
+
 
 using std::vector;
 
-template<typename T>
-T squareDistance(vector<T> pointA, vector<T> pointB);
+uint squareDistance(vector<uint16_t> pointA, vector<uint16_t>pointB);
 
 #endif

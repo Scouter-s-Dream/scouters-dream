@@ -10,18 +10,18 @@ class Entity{
     private:
 
         const uint16_t id;
-        const uint type;
+        const uint16_t type;
         vector<short> velocities;
         BoundingBox boundingBox;
         LinkedList trajectory;
 
     public:
 
-        Entity(uint16_t id, uint type, BoundingBox box);
+        Entity(uint16_t id, uint16_t type, BoundingBox box);
         
         void setBox(BoundingBox boundingBox);
 
-        BoundingBox* getBoundingBox();
+        BoundingBox getBoundingBox();
 
         const uint16_t getId();
 
@@ -33,7 +33,7 @@ class Entity{
 
         uint squareDistanceTo(Entity &e);
 
-        Entity* findClosest(std::vector<Entity>  entityVector);
+        Entity findClosest(std::vector<Entity>  entityVector);
 
 };
 

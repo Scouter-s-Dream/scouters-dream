@@ -9,10 +9,10 @@ Args:
  - `cap (cv::VideoCapture)` -> the vidoe instance that is being captured
  - `framesToSkip (short)` -> the number of frames that is being skipped
 */
-void skipFrames(VideoCapture cap, short framesToSkip){
+void skipFrames(VideoCapture cap, uint8_t framesToSkip){
 
 	Mat blank;
-	for (uint i = 0; i < framesToSkip; i++){
+	for (uint8_t i = 0; i < framesToSkip; i++){
 		cap.read(blank);
 	}
 
