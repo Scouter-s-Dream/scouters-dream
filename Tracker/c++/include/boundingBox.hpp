@@ -2,43 +2,45 @@
 #define __BOUNDING_BOX_HPP
 
 #include "mathUtils.hpp"
-#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <vector>
+#include <string.h>
+
+using std::vector;
 
 class BoundingBox{
 
     private:
 
-        int box[4]; //[x, y, w, h]
-        int area;
-        int perimeter;
-        int center[2];
+        vector<uint16_t> box; //[x, y, w, h] the x y is of the center.
+        uint area;
+        uint perimeter;
 
     public:
 
         BoundingBox();
-        BoundingBox(int *pointWithClasses);
-                
-        void setBox(int *pointWithClasses);
+        BoundingBox(uint16_t* pointWithClasses);
 
-        int* getBox();
+        void setBox(uint16_t* pointWithClasses);
 
-        int* getCenter();
+        vector<uint16_t> getBox();
 
-        double squareDistanceTo(BoundingBox b);
+        vector<uint16_t> getCenter();
 
-        bool isIntersectingTo(BoundingBox b, int difference = 0);
+        uint getArea();
+
+        uint getPerimeter();
+
+        uint squareDistanceTo(BoundingBox b);
+
+        bool isIntersectingTo(BoundingBox boundingBox, uint difference = 0);
 
         bool isCloseTo(BoundingBox b, double distance);
 
-        void print();
-
-
 };
 
-std::vector<BoundingBox> pointsToBoundingBoxes(int *pointsWithClass, int size);
+std::vector<BoundingBox> pointsToBoundingBoxes(uint *pointsWithClass, uint size);
 
-void avrageBoundingBoxes(BoundingBox dest, std::vector<BoundingBox> boundingBoxes, int startLoc, int stopLoc);
+void avrageBoundingBoxes(BoundingBox dest, std::vector<BoundingBox> boundingBoxes, uint startLoc, uint stopLoc);
 
 #endif 
