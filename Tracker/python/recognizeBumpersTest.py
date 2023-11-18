@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 import cv2
 import numpy as np
-from time import time
+from time import time, sleep
 from tracker import Tracker
 
 #TEST CODE DONT TAKE SERIOUSLY
@@ -11,26 +11,26 @@ modelBumpers = YOLO('bumper_weights/v4/best (3).pt')
 
 success, frame = cap.read()
 
-print(success)
-
-if success:
-    
+def prepFrame(frame):
     frame = cv2.resize(frame, (640, 640))
     frame = frame[150:400]
     frame = cv2.resize(frame, (1280, 500))
+    return frame
+
+if success:
+    
+    frame = prepFrame(frame)
     resultsB = modelBumpers(frame, verbose=False)
     tracker = Tracker(resultsB[0], frame, True) 
-    print(frame)   
     
+        
 while cap.isOpened():
     success, frame = cap.read()
     
     
     
     if success:
-        frame = cv2.resize(frame, (640, 640))
-        frame = frame[150:400]
-        frame = cv2.resize(frame, (1280, 500))
+        frame = prepFrame(frame)
         t = time()
         resultsB = modelBumpers(frame, verbose=False)
         print("Mode Time", time() - t)
