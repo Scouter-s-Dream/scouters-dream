@@ -9,7 +9,7 @@ that help communicate with the cpp program
 import numpy as np
 import ctypes
 
-lib = ctypes.CDLL('build/libmain.so')
+lib = ctypes.CDLL('./Tracker/libTracker.so')
 
 def c_int16(int: int):
     return ctypes.c_int16(int)

@@ -11,6 +11,8 @@ modelBumpers = YOLO('bumper_weights/v4/best (3).pt')
 
 success, frame = cap.read()
 
+print("r")
+
 def prepFrame(frame):
     frame = cv2.resize(frame, (640, 640))
     frame = frame[150:400]
@@ -23,7 +25,8 @@ if success:
     resultsB = modelBumpers(frame, verbose=False)
     tracker = Tracker(resultsB[0], frame, True) 
     
-        
+print("l")
+
 while cap.isOpened():
     success, frame = cap.read()
     
