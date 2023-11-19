@@ -31,6 +31,8 @@ class Tracker{
 
         void stablePoints();
 
+        void track_by_distance();
+
         void track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img);
 
 };  

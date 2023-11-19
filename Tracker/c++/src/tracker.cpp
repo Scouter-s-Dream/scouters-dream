@@ -142,15 +142,31 @@ void Tracker::stablePoints(){}
 // 	delete[] similar;
 // }
 
+void Tracker::track_by_distance(){
+
+	uint16_t size = this->entitys.size();
+	uint16_t newSize = this->currentEntities.size();
+
+	for (uint16_t i = 0; i < size; i++){
+		entitys[i].setBox(entitys[i].findClosest(this->currentEntities)->getBoundingBox());
+	}
+
+	if (size < newSize){
+		this->entitys.reserve(newSize);
+		for (uint16_t i = 0; i < newSize - size; i++){
+			Entity* newEntity = &this->currentEntities[i - size + 1];
+			this->entitys.emplace_back(size + 1, newEntity->getType(), newEntity->getBoundingBox());
+		}
+	} 
+
+}
+
 void Tracker::track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
 	
-	setTrackPoints(pointsWithClasses, size);
-	setImg(img);
+	this->setTrackPoints(pointsWithClasses, size);
+	this->setImg(img);
 
-	// uint16_t minSize = std::min(this->currentEntities.size(), this->lastEntities.size());
-	// for (uint16_t i = 0; i < minSize; i++){
-	// 	Entity *temp = this->lastEntities[i].findClosest(this->currentEntities);
-	// }
+	this->track_by_distance();
 	
 	if (this->visualize){
 		this->drawBoundingBoxes();
