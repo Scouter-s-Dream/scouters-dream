@@ -25,6 +25,14 @@ class Entity{
 
         const uint16_t getId();
 
+        const uint16_t getType();
+
+        BoundingBox getBoundingBox() const;
+
+        const uint16_t getId() const;
+
+        const uint16_t getType() const;
+
         void setVelocity();
 
         vector<short> getVelocities();
@@ -33,7 +41,9 @@ class Entity{
 
         uint squareDistanceTo(Entity &e);
 
-        Entity findClosest(std::vector<Entity>  entityVector);
+        Entity operator=(const Entity &entity);
+
+        Entity* findClosest(std::vector<Entity>  &entityVector);
 
 };
 
