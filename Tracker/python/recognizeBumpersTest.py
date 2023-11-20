@@ -9,7 +9,8 @@ print("loading")
 cap = cv2.VideoCapture('test_videos/dcmp.mp4')
 modelBumpers = YOLO('bumper_weights/v4/best (3).pt')
 
-success, frame = cap.read()
+for _ in range(10):
+    success, frame = cap.read()
 
 print("r")
 
