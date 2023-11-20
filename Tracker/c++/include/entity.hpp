@@ -13,7 +13,7 @@ class Entity{
         const uint16_t type;
         vector<short> velocities;
         BoundingBox boundingBox;
-        LinkedList trajectory;
+        LinkedList* trajectory;
 
     public:
 

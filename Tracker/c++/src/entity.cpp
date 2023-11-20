@@ -2,7 +2,7 @@
 
 Entity::Entity(uint16_t id, uint16_t type, BoundingBox boundingBox) : id(id), type(type){
     this->setBox(boundingBox);
-    this->trajectory = LinkedList();
+    this->trajectory = new LinkedList(boundingBox);
     
 }
 
@@ -11,7 +11,7 @@ void Entity::setBox(BoundingBox boundingBox){
 }
 
 void Entity::addToTrajectory(){
-    this->trajectory.append(this->boundingBox, this->velocities);
+    this->trajectory->append(this->boundingBox);
 }
 
 BoundingBox Entity::getBoundingBox(){
@@ -43,7 +43,8 @@ uint Entity::squareDistanceTo(Entity &e){
 }
 
 Entity Entity::operator=(const Entity& entity){
-    return Entity(entity.getId(), entity.getType(), entity.getBoundingBox());
+    std::cout << "called\n";
+    return entity;
 }
 
 Entity* Entity::findClosest(std::vector<Entity> &entityVector){
