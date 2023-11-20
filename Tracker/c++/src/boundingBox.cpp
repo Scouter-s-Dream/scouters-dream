@@ -161,3 +161,7 @@ std::ostream& operator<<(std::ostream& os, BoundingBox& boundingBox){
 
     return os;
 }
+
+// BoundingBox BoundingBox::operator=(const BoundingBox& box){
+//     return box;
+// }
