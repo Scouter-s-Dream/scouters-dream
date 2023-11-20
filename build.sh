@@ -1,4 +1,5 @@
 #!/bin/sh
+cd Tracker
 cmake -B ./build
 cd build 
 make -j4
