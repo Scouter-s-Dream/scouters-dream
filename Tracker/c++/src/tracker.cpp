@@ -20,11 +20,11 @@ std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> bou
 	
 	std::vector<Entity> entities;
     entities.reserve(boundingBoxes.size());
+	uint8_t pointsWithClassSize = 5; //pointWithClassSize - 1 means points without class
 	
 	for (uint16_t i = 0, size = boundingBoxes.size(); i < size; i++){
-        entities.emplace_back(i, pointsWithClass[5*i + 4], boundingBoxes[i]);
+        entities.emplace_back(i, pointsWithClass[pointsWithClassSize*i + pointsWithClassSize-1], boundingBoxes[i]);
 	}
-    //TODO switch magic numbers or give them explenations
 	return entities;
 }
 
@@ -40,15 +40,15 @@ void Tracker::setTrackPoints(uint16_t *pointsWithClass, uint16_t size){
 }
 
 void Tracker::drawBoundingBoxes(){
-	for (uint16_t i = 0, size = this->currentEntities.size(); i < size; i++){
-		uint16_t x = this->currentEntities[i].getBoundingBox().getBox()[0] - this->currentEntities[i].getBoundingBox().getBox()[2] / 2;
-		uint16_t y = this->currentEntities[i].getBoundingBox().getBox()[1] - this->currentEntities[i].getBoundingBox().getBox()[3] / 2;
-		uint16_t w = this->currentEntities[i].getBoundingBox().getBox()[2];
-		uint16_t h = this->currentEntities[i].getBoundingBox().getBox()[3];
+	for (uint16_t i = 0, size = this->entitys.size(); i < size; i++){
+		uint16_t x = this->entitys[i].getBoundingBox().getBox()[0] - this->entitys[i].getBoundingBox().getBox()[2] / 2;
+		uint16_t y = this->entitys[i].getBoundingBox().getBox()[1] - this->entitys[i].getBoundingBox().getBox()[3] / 2;
+		uint16_t w = this->entitys[i].getBoundingBox().getBox()[2];
+		uint16_t h = this->entitys[i].getBoundingBox().getBox()[3];
 		cv::Rect2i rect(x, y, w, h);
 		cv::rectangle(this->img, rect, CV_RGB(255, 0, 0), 2);
-		cv::Point2i centerPoint(this->currentEntities[i].getBoundingBox().getBox()[0], this->currentEntities[i].getBoundingBox().getBox()[1]);
-		cv::putText(this->img, std::to_string(this->currentEntities[i].getId()), centerPoint, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255), 2);
+		cv::Point2i centerPoint(this->entitys[i].getBoundingBox().getBox()[0], this->entitys[i].getBoundingBox().getBox()[1]);
+		cv::putText(this->img, std::to_string(this->entitys[i].getId()), centerPoint, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255), 2);
 	}
 }
 
@@ -149,13 +149,16 @@ void Tracker::track_by_distance(){
 
 	for (uint16_t i = 0; i < size; i++){
 		entitys[i].setBox(entitys[i].findClosest(this->currentEntities)->getBoundingBox());
-	}
+	}\
+
 
 	if (size < newSize){
 		this->entitys.reserve(newSize);
-		for (uint16_t i = 0; i < newSize - size; i++){
-			Entity* newEntity = &this->currentEntities[i - size + 1];
-			this->entitys.emplace_back(size + 1, newEntity->getType(), newEntity->getBoundingBox());
+		std::cout << this->entitys.size() << "  " << newSize << "\n";
+
+		for (uint16_t i = size; i < newSize - size; i++){
+			Entity newEntity = this->currentEntities[i - size + 1];
+			this->entitys.emplace_back(size + 1, newEntity.getType(), newEntity.getBoundingBox());
 		}
 	} 
 
@@ -173,7 +176,7 @@ void Tracker::track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
 		cv::imshow("frame", this->img);
 		cv::waitKey(1);
 	}
-
+	this->currentEntities.clear();
 	/*
 		Tracker psudo code:
 
