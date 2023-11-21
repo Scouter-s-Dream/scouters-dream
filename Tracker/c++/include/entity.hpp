@@ -43,7 +43,7 @@ class Entity{
 
         Entity operator=(const Entity &entity);
 
-        Entity* findClosest(std::vector<Entity>  &entityVector);
+        Entity findClosest(std::vector<Entity>  &entityVector);
 
 };
 

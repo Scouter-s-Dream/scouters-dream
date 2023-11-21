@@ -9,7 +9,10 @@ Tracker::Tracker(uint16_t* pointsWithClass, uint16_t size, uint8_t* img, uint16_
 	: visualize(visualize), rows(rows), cols(cols){
 	setTrackPoints(pointsWithClass, size);
 	setImg(img);
-	this->entitys = vector<Entity>(this->currentEntities);
+	this->entitys.reserve(this->currentEntities.size());
+	for (uint i = 0; i < this->entitys.size(); i++){
+		this->entitys[i] = this->currentEntities[i];
+	}
 }
 
 void Tracker::setImg(uint8_t* img){
@@ -145,36 +148,45 @@ void Tracker::stablePoints(){}
 void Tracker::track_by_distance(){
 
 	uint16_t size = this->entitys.size();
-	uint16_t newSize = this->currentEntities.size();
+	// uint16_t newSize = this->currentEntities.size();
 
 	for (uint16_t i = 0; i < size; i++){
-		entitys[i].setBox(entitys[i].findClosest(this->currentEntities)->getBoundingBox());
-	}\
+		entitys[i].setBox(entitys[i].findClosest(this->currentEntities).getBoundingBox());
+	}
 
 
-	if (size < newSize){
-		this->entitys.reserve(newSize);
-		std::cout << this->entitys.size() << "  " << newSize << "\n";
+	// if (size < newSize){
+	// 	this->entitys.reserve(newSize);
+	// 	std::cout << this->entitys.size() << "  " << newSize << "\n";
 
-		for (uint16_t i = size; i < newSize - size; i++){
-			Entity newEntity = this->currentEntities[i - size + 1];
-			this->entitys.emplace_back(size + 1, newEntity.getType(), newEntity.getBoundingBox());
-		}
-	} 
+	// 	for (uint16_t i = size; i < newSize - size; i++){
+	// 		Entity newEntity = this->currentEntities[i - size + 1];
+	// 		this->entitys.emplace_back(size + 1, newEntity.getType(), newEntity.getBoundingBox());
+	// 	}
+	// } 
 
 }
 
 void Tracker::track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
 	
+
 	this->setTrackPoints(pointsWithClasses, size);
 	this->setImg(img);
 
 	this->track_by_distance();
 	
 	if (this->visualize){
+		cout << "CURRENT --------\n";
+		for (uint i = 0; i < this->currentEntities.size(); i++){
+			cout << this->currentEntities[i].getBoundingBox() << endl;
+		}
+		cout << "ENTITIES --------\n";
+		for (uint i = 0; i < this->entitys.size(); i++){
+			cout << this->entitys[i].getBoundingBox() << endl;
+		}
 		this->drawBoundingBoxes();
 		cv::imshow("frame", this->img);
-		cv::waitKey(1);
+		cv::waitKey(0);
 	}
 	this->currentEntities.clear();
 	/*

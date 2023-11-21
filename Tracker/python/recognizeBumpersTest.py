@@ -12,8 +12,6 @@ modelBumpers = YOLO('bumper_weights/v4/best (3).pt')
 for _ in range(10):
     success, frame = cap.read()
 
-print("r")
-
 def prepFrame(frame):
     frame = cv2.resize(frame, (640, 640))
     frame = frame[150:400]
@@ -26,8 +24,6 @@ if success:
     resultsB = modelBumpers(frame, verbose=False)
     tracker = Tracker(resultsB[0], frame, True) 
     
-print("l")
-
 while cap.isOpened():
     success, frame = cap.read()
     
@@ -35,13 +31,12 @@ while cap.isOpened():
     
     if success:
         frame = prepFrame(frame)
-        t = time()
+        
         resultsB = modelBumpers(frame, verbose=False)
-        print("Mode Time", time() - t)
-        t = time()
+        
+        print("CALLED PYTHON --------------------------")
         tracker.track(resultsB[0], frame)
-        print("CPP time:", time() - t)
-        cv2.waitKey(1)
+        sleep(1000)
 
 
     

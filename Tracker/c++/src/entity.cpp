@@ -2,7 +2,7 @@
 
 Entity::Entity(uint16_t id, uint16_t type, BoundingBox boundingBox) : id(id), type(type){
     this->setBox(boundingBox);
-    this->trajectory = new LinkedList(boundingBox);
+    // this->trajectory = new LinkedList(boundingBox);
     
 }
 
@@ -43,23 +43,23 @@ uint Entity::squareDistanceTo(Entity &e){
 }
 
 Entity Entity::operator=(const Entity& entity){
-    std::cout << "called\n";
     return entity;
 }
 
-Entity* Entity::findClosest(std::vector<Entity> &entityVector){
-    
+Entity Entity::findClosest(std::vector<Entity> &entityVector){
+    std::cout << entityVector.size() << std::endl;
+    // uint16_t maxDistance = this->getBoundingBox().getWidth();
     uint16_t distance = UINT16_MAX;
-    uint16_t idx = entityVector.size() + 1; // not in array.
-
+    uint16_t idx = entityVector.size(); // not in array.
     for (uint16_t i = 0, size = entityVector.size(); i < size; i++){
-        int currentDistance = this->squareDistanceTo(entityVector[i]);
+        uint currentDistance = this->squareDistanceTo(entityVector[i]);
         if (currentDistance < distance){
             idx = i;
             distance = currentDistance;
         }
     }
-    Entity* closet = &entityVector[idx];
-    entityVector.erase(entityVector.begin() + idx, entityVector.begin() + idx);
+    Entity closet = entityVector[idx];
+    std::cout << entityVector.size() << std::endl;
+    entityVector.erase(entityVector.begin() + idx);
     return closet;
 }
