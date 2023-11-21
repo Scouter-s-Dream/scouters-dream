@@ -27,6 +27,10 @@ class BoundingBox{
 
         vector<uint16_t> getCenter();
 
+        uint16_t getWidth();      
+
+        uint16_t getHeight();
+
         uint getArea();
 
         uint getPerimeter();
@@ -37,11 +41,12 @@ class BoundingBox{
 
         bool isCloseTo(BoundingBox b, double distance);
 
+
         // BoundingBox operator=(const BoundingBox& box);
 
 };
 
-std::ostream& operator<<(std::ostream& os, BoundingBox& boundingBox);
+std::ostream& operator<<(std::ostream& os, BoundingBox boundingBox);
 
 std::vector<BoundingBox> pointsToBoundingBoxes(uint16_t *pointsWithClass, uint16_t size);
 

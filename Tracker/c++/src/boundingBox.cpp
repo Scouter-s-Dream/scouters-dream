@@ -56,6 +56,13 @@ vector<uint16_t> BoundingBox::getCenter(){
    return vector<uint16_t> (this->box.begin(), this->box.begin() + 2); 
 }
 
+uint16_t BoundingBox::getWidth(){
+    return this->box[2];
+} 
+
+uint16_t BoundingBox::getHeight(){
+    return this->box[3];
+}
 /*
 Returns The square distance between centers to a BoundingBox.
 -
@@ -149,7 +156,7 @@ std::vector<BoundingBox> pointsToBoundingBoxes(uint16_t *pointsWithClass, uint16
 Overides the << opertator to print parameters of the BoundingBox.
 -
 */
-std::ostream& operator<<(std::ostream& os, BoundingBox& boundingBox){
+std::ostream& operator<<(std::ostream& os, BoundingBox boundingBox){
     // Printing all the elements
     os << "Box: [";
     for (uint i = 0; i < 4; i++){
@@ -158,7 +165,7 @@ std::ostream& operator<<(std::ostream& os, BoundingBox& boundingBox){
     os << "\b]\n";
     os << "Perimeter: " << boundingBox.getPerimeter() << "\n";
     os << "Area: " << boundingBox.getArea() << "\n"; 
-
+    os << "Center: [" << boundingBox.getCenter()[0] << ", " << boundingBox.getCenter()[1] << "]\n"; 
     return os;
 }
 
