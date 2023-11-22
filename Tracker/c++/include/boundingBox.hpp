@@ -2,9 +2,7 @@
 #define __BOUNDING_BOX_HPP
 
 #include "mathUtils.hpp"
-#include <iostream>
-#include <vector>
-#include <string.h>
+#include "vectorFuncs.hpp"
 
 using std::vector;
 
@@ -40,7 +38,6 @@ class BoundingBox{
         bool isIntersectingTo(BoundingBox boundingBox, uint difference = 0);
 
         bool isCloseTo(BoundingBox b, double distance);
-
 
         // BoundingBox operator=(const BoundingBox& box);
 
