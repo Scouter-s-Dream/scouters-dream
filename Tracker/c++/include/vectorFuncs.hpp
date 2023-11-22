@@ -12,6 +12,7 @@ void removeAtIndex(vector<T2> &vect, uint16_t index);
 template<typename T2>
 void removeAtIndex(vector<T2> &vect, uint16_t index){    
     //TODO add exception on size.
+    std::cout << vect[index];
     vect.erase(vect.begin() + index);
 }
 
