@@ -4,6 +4,7 @@
 #include "boundingBox.hpp"
 #include "linkedList.hpp"
 #include <limits>
+#include "vectorFuncs.hpp"
 
 class Entity{
 
@@ -40,8 +41,6 @@ class Entity{
         void addToTrajectory();    
 
         uint squareDistanceTo(Entity &e);
-
-        Entity operator=(const Entity &entity);
 
         Entity findClosest(std::vector<Entity>  &entityVector);
 

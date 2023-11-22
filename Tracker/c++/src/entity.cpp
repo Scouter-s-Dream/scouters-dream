@@ -42,13 +42,18 @@ uint Entity::squareDistanceTo(Entity &e){
     return this->getBoundingBox().squareDistanceTo(e.getBoundingBox());
 }
 
-Entity Entity::operator=(const Entity& entity){
-    return entity;
+std::ostream& operator<<(std::ostream& os, const Entity t){
+    // Printing all the elements
+    // using <<
+    os << "id: " << t.getId() << "\n";
+    os << "type: " << t.getType() << "\n";
+    os << "box: " << t.getBoundingBox() << "\n";
+    return os;
 }
 
 Entity Entity::findClosest(std::vector<Entity> &entityVector){
-    std::cout << entityVector.size() << std::endl;
     // uint16_t maxDistance = this->getBoundingBox().getWidth();
+    vector<Entity> newEntityVector;
     uint16_t distance = UINT16_MAX;
     uint16_t idx = entityVector.size(); // not in array.
     for (uint16_t i = 0, size = entityVector.size(); i < size; i++){
@@ -58,8 +63,9 @@ Entity Entity::findClosest(std::vector<Entity> &entityVector){
             distance = currentDistance;
         }
     }
+    std::cout << "idx " << idx << "\n\n";
     Entity closet = entityVector[idx];
-    std::cout << entityVector.size() << std::endl;
-    entityVector.erase(entityVector.begin() + idx);
+    removeAtIndex(entityVector, idx);
+
     return closet;
 }
