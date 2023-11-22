@@ -9,10 +9,8 @@ Tracker::Tracker(uint16_t* pointsWithClass, uint16_t size, uint8_t* img, uint16_
 	: visualize(visualize), rows(rows), cols(cols){
 	setTrackPoints(pointsWithClass, size);
 	setImg(img);
-	this->entitys.reserve(this->currentEntities.size());
-	for (uint i = 0; i < this->entitys.size(); i++){
-		this->entitys[i] = this->currentEntities[i];
-	}
+	cout << "size: " << this->currentEntities.size() << "\n";
+	this->entitys = vector<Entity> (this->currentEntities);
 }
 
 void Tracker::setImg(uint8_t* img){
@@ -149,9 +147,10 @@ void Tracker::track_by_distance(){
 
 	uint16_t size = this->entitys.size();
 	// uint16_t newSize = this->currentEntities.size();
-
+	std::vector<Entity> copy(this->currentEntities); 
 	for (uint16_t i = 0; i < size; i++){
-		entitys[i].setBox(entitys[i].findClosest(this->currentEntities).getBoundingBox());
+		entitys[i].setBox(entitys[i].findClosest(copy).getBoundingBox());
+		
 	}
 
 
@@ -169,21 +168,16 @@ void Tracker::track_by_distance(){
 
 void Tracker::track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
 	
-
 	this->setTrackPoints(pointsWithClasses, size);
+
 	this->setImg(img);
 
 	this->track_by_distance();
 	
 	if (this->visualize){
-		cout << "CURRENT --------\n";
-		for (uint i = 0; i < this->currentEntities.size(); i++){
-			cout << this->currentEntities[i].getBoundingBox() << endl;
-		}
-		cout << "ENTITIES --------\n";
-		for (uint i = 0; i < this->entitys.size(); i++){
-			cout << this->entitys[i].getBoundingBox() << endl;
-		}
+		cout << "current size: " << this->currentEntities.size() << "\n";
+		cout << "size: " << this->entitys.size() << "\n";
+
 		this->drawBoundingBoxes();
 		cv::imshow("frame", this->img);
 		cv::waitKey(0);
