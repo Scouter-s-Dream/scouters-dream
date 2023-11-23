@@ -13,17 +13,18 @@ for _ in range(10):
     success, frame = cap.read()
 
 def prepFrame(frame):
-    frame = cv2.resize(frame, (640, 640))
-    frame = frame[150:400]
-    frame = cv2.resize(frame, (1280, 500))
+    # frame = cv2.resize(frame, (640, 640))
+    frame = frame[250 : 650]
+    # frame = cv2.resize(frame, (1280, 500))
     return frame
 
 if success:
     
     frame = prepFrame(frame)
     resultsB = modelBumpers(frame, verbose=False)
+    print(1)
     tracker = Tracker(resultsB[0], frame, True) 
-    
+    print(2)
 while cap.isOpened():
     success, frame = cap.read()
     
@@ -35,9 +36,9 @@ while cap.isOpened():
         resultsB = modelBumpers(frame, verbose=False)
         
         print("CALLED PYTHON --------------------------")
+        t = time()
         tracker.track(resultsB[0], frame)
-        sleep(1000)
-
+        print(time() - t)
 
     
 
