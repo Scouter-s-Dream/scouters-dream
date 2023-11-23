@@ -44,6 +44,8 @@ class Entity{
 
         uint squareDistanceTo(Entity &e);
 
+        Entity operator=(const Entity& e);
+
         Entity findClosest(std::vector<Entity>  &entityVector);
 
 };

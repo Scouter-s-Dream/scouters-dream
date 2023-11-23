@@ -57,6 +57,10 @@ std::ostream& operator<<(std::ostream& os, const Entity t){
     return os;
 }
 
+Entity Entity::operator=(const Entity& e){
+    return e;
+}
+
 Entity Entity::findClosest(std::vector<Entity> &entityVector){
     // uint16_t maxDistance = this->getBoundingBox().getWidth();
     vector<Entity> newEntityVector;
@@ -69,7 +73,6 @@ Entity Entity::findClosest(std::vector<Entity> &entityVector){
             distance = currentDistance;
         }
     }
-    std::cout << "idx " << idx << "\n\n";
     Entity closet = entityVector[idx];
     entityVector[idx] = Entity();
 
