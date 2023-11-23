@@ -3,14 +3,14 @@
 Node* NodeConstractor(BoundingBox& boundingBox){
 
     //TODO Turn into const, sizof is just a useless clac because it's const
-    Node* newNode = (Node*) malloc(sizeof(Node));
+    Node* newNode = new Node();
     newNode->boundingBox = boundingBox;
     newNode->next = nullptr;
     return newNode;
 }
 
 Node* emptyNode(){
-    Node* newNode = (Node*) malloc(sizeof(Node));
+    Node* newNode = new Node();
     newNode->next = nullptr;
     return newNode;
 }
@@ -65,7 +65,7 @@ void LinkedList::remove(uint16_t index){
 
     if (index == 0){
         this->start = ref->next;
-        free(ref);
+        delete ref;
         return;
     }
 
@@ -74,7 +74,7 @@ void LinkedList::remove(uint16_t index){
     }
 
     Node* next = ref->next->next;
-    free(ref->next);
+    delete ref->next;
     ref->next = next;
     this->length--;
     
@@ -116,10 +116,10 @@ void LinkedList::insert(uint16_t index, BoundingBox boundingBox){
 //     Node* ref = this->start;
 //     while (ref->next != nullptr){
 //         this->start = ref->next;
-//         free(ref);
+//         delete ref;
 //         ref = this->start;
 //     }
-//     free(ref);
-//     free(this->start);
-//     free(this->end);
+//     delete ref;
+//     delete this->start;
+//     delete this->end;
 // }
