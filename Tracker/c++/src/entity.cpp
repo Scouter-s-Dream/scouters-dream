@@ -6,6 +6,12 @@ Entity::Entity(uint16_t id, uint16_t type, BoundingBox boundingBox) : id(id), ty
     
 }
 
+Entity::Entity() : id(UINT16_MAX), type(UINT16_MAX){
+    //generates empty enitity
+    this->boundingBox = BoundingBox();
+    
+}
+
 void Entity::setBox(BoundingBox boundingBox){
     this->boundingBox = boundingBox;
 }
@@ -65,7 +71,7 @@ Entity Entity::findClosest(std::vector<Entity> &entityVector){
     }
     std::cout << "idx " << idx << "\n\n";
     Entity closet = entityVector[idx];
-    removeAtIndex(entityVector, idx);
+    entityVector[idx] = Entity();
 
     return closet;
 }

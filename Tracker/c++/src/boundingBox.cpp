@@ -6,7 +6,13 @@ using std::cout;
 BoundingBox default constractor.
 -
 */
-BoundingBox::BoundingBox(){}
+BoundingBox::BoundingBox(){
+    for (int i = 0; i < 4; i++){
+        this->box[i] = UINT16_MAX;
+    }
+    this->area = UINT32_MAX;
+    this->perimeter = UINT32_MAX;
+}
 
 /*
 BoundingBox constractor.

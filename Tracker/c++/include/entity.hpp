@@ -19,6 +19,8 @@ class Entity{
     public:
 
         Entity(uint16_t id, uint16_t type, BoundingBox box);
+
+        Entity();
         
         void setBox(BoundingBox boundingBox);
 
