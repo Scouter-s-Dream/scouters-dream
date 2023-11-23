@@ -1,5 +1,4 @@
 #include "boundingBox.hpp"
-
 using std::cout;
 
 /*
@@ -7,7 +6,8 @@ BoundingBox default constractor.
 -
 */
 BoundingBox::BoundingBox(){
-    for (int i = 0; i < 4; i++){
+    this->box.reserve(POINT_SIZE);
+    for (int i = 0; i < POINT_SIZE; i++){
         this->box[i] = UINT16_MAX;
     }
     this->area = UINT32_MAX;
@@ -31,9 +31,8 @@ Args:
  - `pointWithClass (uint[])` -> xywh point with class [x, y, w, h].
 */
 void BoundingBox::setBox(uint16_t* point){
-    uint8_t pointSize = 4;
-    this->box.reserve(pointSize);
-    for (uint8_t i = 0; i < pointSize; i++){
+    this->box.reserve(POINT_SIZE);
+    for (uint8_t i = 0; i < POINT_SIZE; i++){
         this->box.push_back(point[i]);
     }
     this->area = point[2] * point[3]; //w * h
@@ -130,7 +129,7 @@ void avrageBoundingBoxes(BoundingBox dest, std::vector<BoundingBox> boundingBoxe
         h += boundingBoxes[i].getBox()[3];
     }
     uint16_t times = stopLoc - startLoc + 1;
-    uint16_t out[4] = {static_cast<uint16_t>(x /times), static_cast<uint16_t>(y /times), static_cast<uint16_t>(w /times), static_cast<uint16_t>(h /times)};
+    uint16_t out[POINT_SIZE] = {static_cast<uint16_t>(x /times), static_cast<uint16_t>(y /times), static_cast<uint16_t>(w /times), static_cast<uint16_t>(h /times)};
 
     dest.setBox(out);
 }
@@ -151,7 +150,7 @@ std::vector<BoundingBox> pointsToBoundingBoxes(uint16_t *pointsWithClass, uint16
     boundingBoxes.reserve(size);
 
 	for (uint i = 0; i < size; i++){
-        boundingBoxes.emplace_back(pointsWithClass + i*5);
+        boundingBoxes.emplace_back(pointsWithClass + i*POINTCLASS_SIZE);
 	}
     
 	return boundingBoxes;
@@ -165,7 +164,7 @@ Overides the << opertator to print parameters of the BoundingBox.
 std::ostream& operator<<(std::ostream& os, BoundingBox boundingBox){
     // Printing all the elements
     os << "Box: [";
-    for (uint i = 0; i < 4; i++){
+    for (uint i = 0; i < POINT_SIZE; i++){
         cout << boundingBox.getBox()[i] << " ";
     }
     os << "\b]\n";

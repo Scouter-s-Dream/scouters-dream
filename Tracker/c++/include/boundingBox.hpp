@@ -4,6 +4,9 @@
 #include "mathUtils.hpp"
 #include "vectorFuncs.hpp"
 
+#define POINT_SIZE  (4)
+#define POINTCLASS_SIZE (5)
+
 using std::vector;
 
 class BoundingBox{
