@@ -4,9 +4,6 @@ Node* NodeConstractor(BoundingBox& boundingBox){
 
     //TODO Turn into const, sizof is just a useless clac because it's const
     Node* newNode = (Node*) malloc(sizeof(Node));
-    std::cout<< "1\n";
-    std::cout << newNode->boundingBox << "\n";
-    std::cout<< "2\n";
     newNode->boundingBox = boundingBox;
     newNode->next = nullptr;
     return newNode;

@@ -9,7 +9,6 @@ Tracker::Tracker(uint16_t* pointsWithClass, uint16_t size, uint8_t* img, uint16_
 	: visualize(visualize), rows(rows), cols(cols){
 	setTrackPoints(pointsWithClass, size);
 	setImg(img);
-	cout << "size: " << this->currentEntities.size() << "\n";
 	this->entitys = vector<Entity> (this->currentEntities);
 }
 
@@ -21,10 +20,9 @@ std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> bou
 	
 	std::vector<Entity> entities;
     entities.reserve(boundingBoxes.size());
-	uint8_t pointsWithClassSize = 5; //pointWithClassSize - 1 means points without class
 	
 	for (uint16_t i = 0, size = boundingBoxes.size(); i < size; i++){
-        entities.emplace_back(i, pointsWithClass[pointsWithClassSize*i + pointsWithClassSize-1], boundingBoxes[i]);
+        entities.emplace_back(i, pointsWithClass[POINTCLASS_SIZE*i + POINT_SIZE], boundingBoxes[i]);
 	}
 	return entities;
 }
@@ -47,9 +45,9 @@ void Tracker::drawBoundingBoxes(){
 		uint16_t w = this->entitys[i].getBoundingBox().getBox()[2];
 		uint16_t h = this->entitys[i].getBoundingBox().getBox()[3];
 		cv::Rect2i rect(x, y, w, h);
-		cv::rectangle(this->img, rect, CV_RGB(255, 0, 0), 2);
+		cv::rectangle(this->img, rect, CV_RGB(255, 0, 255), 2);
 		cv::Point2i centerPoint(this->entitys[i].getBoundingBox().getBox()[0], this->entitys[i].getBoundingBox().getBox()[1]);
-		cv::putText(this->img, std::to_string(this->entitys[i].getId()), centerPoint, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 0, 255), 2);
+		cv::putText(this->img, std::to_string(this->entitys[i].getId()), centerPoint, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 255, 255), 2);
 	}
 }
 
@@ -175,12 +173,10 @@ void Tracker::track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
 	this->track_by_distance();
 	
 	if (this->visualize){
-		cout << "current size: " << this->currentEntities.size() << "\n";
-		cout << "size: " << this->entitys.size() << "\n";
 
 		this->drawBoundingBoxes();
 		cv::imshow("frame", this->img);
-		cv::waitKey(0);
+		cv::waitKey(1);
 	}
 	this->currentEntities.clear();
 	/*
