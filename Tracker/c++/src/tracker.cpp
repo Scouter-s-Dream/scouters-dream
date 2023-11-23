@@ -10,6 +10,7 @@ Tracker::Tracker(uint16_t* pointsWithClass, uint16_t size, uint8_t* img, uint16_
 	setTrackPoints(pointsWithClass, size);
 	setImg(img);
 	this->entitys = vector<Entity> (this->currentEntities);
+	this->addToTrajectory();
 }
 
 void Tracker::setImg(uint8_t* img){
@@ -148,7 +149,6 @@ void Tracker::track_by_distance(){
 	std::vector<Entity> copy(this->currentEntities); 
 	for (uint16_t i = 0; i < size; i++){
 		entitys[i].setBox(entitys[i].findClosest(copy).getBoundingBox());
-		
 	}
 
 
@@ -164,11 +164,20 @@ void Tracker::track_by_distance(){
 
 }
 
+void Tracker::addToTrajectory(){
+	for (Entity& entity : this->entitys){
+		entity.addToTrajectory();
+		cout << entity.trajectory.length << "\n";
+	}
+}
+
 void Tracker::track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
 	
 	this->setTrackPoints(pointsWithClasses, size);
 
 	this->setImg(img);
+
+	this->addToTrajectory();
 
 	this->track_by_distance();
 	

@@ -33,6 +33,8 @@ class Tracker{
 
         void track_by_distance();
 
+        void addToTrajectory();
+
         void track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img);
 
 };  
