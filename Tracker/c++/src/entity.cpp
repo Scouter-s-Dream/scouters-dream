@@ -2,7 +2,7 @@
 
 Entity::Entity(uint16_t id, uint16_t type, BoundingBox boundingBox) : id(id), type(type){
     this->setBox(boundingBox);
-    // this->trajectory = new LinkedList(boundingBox);
+    this->trajectory = LinkedList(boundingBox);
     
 }
 
@@ -17,7 +17,7 @@ void Entity::setBox(BoundingBox boundingBox){
 }
 
 void Entity::addToTrajectory(){
-    this->trajectory->append(this->boundingBox);
+    this->trajectory.append(this->boundingBox);
 }
 
 BoundingBox Entity::getBoundingBox(){
