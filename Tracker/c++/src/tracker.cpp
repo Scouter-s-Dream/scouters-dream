@@ -9,7 +9,7 @@ Tracker::Tracker(uint16_t* pointsWithClass, uint16_t size, uint8_t* img, uint16_
 	: visualize(visualize), rows(rows), cols(cols){
 	setTrackPoints(pointsWithClass, size);
 	setImg(img);
-	this->entitys = vector<Entity> (this->currentEntities);
+	this->entities = vector<Entity> (this->currentEntities);
 	this->addToTrajectory();
 }
 
@@ -18,10 +18,8 @@ void Tracker::setImg(uint8_t* img){
 }
 
 std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, uint16_t* pointsWithClass){
-	
 	std::vector<Entity> entities;
     entities.reserve(boundingBoxes.size());
-	
 	for (uint16_t i = 0, size = boundingBoxes.size(); i < size; i++){
         entities.emplace_back(i, pointsWithClass[POINTCLASS_SIZE*i + POINT_SIZE], boundingBoxes[i]);
 	}
@@ -40,15 +38,15 @@ void Tracker::setTrackPoints(uint16_t *pointsWithClass, uint16_t size){
 }
 
 void Tracker::drawBoundingBoxes(){
-	for (uint16_t i = 0, size = this->entitys.size(); i < size; i++){
-		uint16_t x = this->entitys[i].getBoundingBox().getBox()[0] - this->entitys[i].getBoundingBox().getBox()[2] / 2;
-		uint16_t y = this->entitys[i].getBoundingBox().getBox()[1] - this->entitys[i].getBoundingBox().getBox()[3] / 2;
-		uint16_t w = this->entitys[i].getBoundingBox().getBox()[2];
-		uint16_t h = this->entitys[i].getBoundingBox().getBox()[3];
+	for (uint16_t i = 0, size = this->entities.size(); i < size; i++){
+		uint16_t x = this->entities[i].getBoundingBox().getBox()[0] - this->entities[i].getBoundingBox().getBox()[2] / 2;
+		uint16_t y = this->entities[i].getBoundingBox().getBox()[1] - this->entities[i].getBoundingBox().getBox()[3] / 2;
+		uint16_t w = this->entities[i].getBoundingBox().getBox()[2];
+		uint16_t h = this->entities[i].getBoundingBox().getBox()[3];
 		cv::Rect2i rect(x, y, w, h);
 		cv::rectangle(this->img, rect, CV_RGB(255, 0, 255), 2);
-		cv::Point2i centerPoint(this->entitys[i].getBoundingBox().getBox()[0], this->entitys[i].getBoundingBox().getBox()[1]);
-		cv::putText(this->img, std::to_string(this->entitys[i].getId()), centerPoint, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 255, 255), 2);
+		cv::Point2i centerPoint(this->entities[i].getBoundingBox().getBox()[0], this->entities[i].getBoundingBox().getBox()[1]);
+		cv::putText(this->img, std::to_string(this->entities[i].getId()), centerPoint, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 255, 255), 2);
 	}
 }
 
@@ -144,11 +142,11 @@ void Tracker::stablePoints(){}
 
 void Tracker::track_by_distance(){
 
-	uint16_t size = this->entitys.size();
+	uint16_t size = this->entities.size();
 	// uint16_t newSize = this->currentEntities.size();
 	std::vector<Entity> copy(this->currentEntities); 
 	for (uint16_t i = 0; i < size; i++){
-		entitys[i].setBox(entitys[i].findClosest(copy).getBoundingBox());
+		entities[i].setBox(entities[i].findClosest(copy).getBoundingBox());
 	}
 
 
@@ -165,12 +163,13 @@ void Tracker::track_by_distance(){
 }
 
 void Tracker::addToTrajectory(){
-	for (Entity& entity : this->entitys){
+	for (Entity& entity : this->entities){
 		entity.addToTrajectory();
-		cout << entity.trajectory.length << "\n";
 	}
 }
-
+ 
+//TODO using a lot of shared pointers - performence heavy.
+//TODO imporve all function performence!.
 void Tracker::track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
 	
 	this->setTrackPoints(pointsWithClasses, size);
