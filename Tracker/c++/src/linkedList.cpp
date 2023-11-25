@@ -1,35 +1,19 @@
 #include "linkedList.hpp"
 
-Node* NodeConstractor(BoundingBox& boundingBox){
-
-    //TODO Turn into const, sizof is just a useless clac because it's const
-    Node* newNode = new Node();
-    newNode->boundingBox = boundingBox;
-    newNode->next = nullptr;
-    return newNode;
-}
-
-Node* emptyNode(){
-    Node* newNode = new Node();
-    newNode->next = nullptr;
-    return newNode;
+LinkedList LinkedList::operator=(const LinkedList& list){
+    return list;
 }
 
 LinkedList::LinkedList(){
-    Node* newNode = emptyNode();
+    std::shared_ptr<Node> newNode = std::make_shared<Node>();
     this->start = newNode;
     this->end = newNode;
 }
 
 LinkedList::LinkedList(BoundingBox& boundingBox){
-    Node* newNode = NodeConstractor(boundingBox);
+    std::shared_ptr<Node> newNode = std::make_shared<Node>(boundingBox);
     this->start = newNode;
     this->end = newNode;
-}
-
-LinkedList::LinkedList(Node node){ //node needs to be alocated on the heap!
-    this->start = &node;
-    this->end = &node;
 }
 
 Node LinkedList::getItem(uint16_t index){
@@ -38,7 +22,7 @@ Node LinkedList::getItem(uint16_t index){
         throw "Out of Bounds";
     }
 
-    Node* ref = this->start;
+    std::shared_ptr<Node> ref = this->start;
 
     for (uint16_t i = 0; i < index; i++){
         ref = ref->next;
@@ -49,8 +33,8 @@ Node LinkedList::getItem(uint16_t index){
 }
 
 void LinkedList::append(BoundingBox boundingBox){
-    Node* newNode = NodeConstractor(boundingBox); 
-    this->end->next = newNode;    
+    std::shared_ptr<Node> newNode = std::make_shared<Node>(boundingBox); 
+    this->end->next = newNode;
     this->end = newNode;
     this->length++;
 }
@@ -61,11 +45,10 @@ void LinkedList::remove(uint16_t index){
         throw "Out of Bounds";
     }
 
-    Node* ref = this->start;
+    std::shared_ptr<Node> ref = this->start;
 
     if (index == 0){
         this->start = ref->next;
-        delete ref;
         return;
     }
 
@@ -73,15 +56,14 @@ void LinkedList::remove(uint16_t index){
         ref = ref->next;
     }
 
-    Node* next = ref->next->next;
-    delete ref->next;
+    std::shared_ptr<Node> next = ref->next->next;
     ref->next = next;
     this->length--;
     
 }
 
 void LinkedList::prepend(BoundingBox boundingBox){
-    Node* newNode = NodeConstractor(boundingBox); 
+    std::shared_ptr<Node> newNode = std::make_shared<Node>(boundingBox);
     newNode->next = this->start;    
     this->start = newNode;
     this->length++;
@@ -92,9 +74,9 @@ void LinkedList::insert(uint16_t index, BoundingBox boundingBox){
         throw "Out of Bounds";
     }
 
-    Node* newNode = NodeConstractor(boundingBox); 
+    std::shared_ptr<Node> newNode = std::make_shared<Node>(boundingBox);
 
-    Node* ref = this->start;
+    std::shared_ptr<Node> ref = this->start;
 
     if (index == 0){
         this->prepend(boundingBox);
@@ -111,15 +93,3 @@ void LinkedList::insert(uint16_t index, BoundingBox boundingBox){
     newNode->next = ref->next;
     ref->next = newNode;
 }
-
-// LinkedList::~LinkedList(){
-//     Node* ref = this->start;
-//     while (ref->next != nullptr){
-//         this->start = ref->next;
-//         delete ref;
-//         ref = this->start;
-//     }
-//     delete ref;
-//     delete this->start;
-//     delete this->end;
-// }
