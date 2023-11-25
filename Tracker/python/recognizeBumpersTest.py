@@ -22,9 +22,9 @@ if success:
     
     frame = prepFrame(frame)
     resultsB = modelBumpers(frame, verbose=False)
-    print(1)
-    tracker = Tracker(resultsB[0], frame, True) 
-    print(2)
+    print("[INFO]: Creating Tracker")
+    tracker = Tracker(resultsB[0], frame, False) 
+    print("[INFO]: Tracker Created")
 while cap.isOpened():
     success, frame = cap.read()
     
@@ -39,6 +39,3 @@ while cap.isOpened():
         t = time()
         tracker.track(resultsB[0], frame)
         print(time() - t)
-
-    
-
