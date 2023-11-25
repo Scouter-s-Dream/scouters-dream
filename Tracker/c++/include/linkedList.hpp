@@ -2,26 +2,30 @@
 #define __LINKED_LIST_HPP
 
 #include "boundingBox.hpp"
+#include <memory>
 
 typedef struct Node Node;
 
 struct Node{
     
-    vector<short> velocities;
-    BoundingBox boundingBox;
-    struct Node *next;
+    const vector<short> velocities;
+    const BoundingBox boundingBox;
+    std::shared_ptr<struct Node> next;
+
+    Node(BoundingBox boundingBox, Node* next): boundingBox(boundingBox), next(nullptr) {}
+
+    Node(BoundingBox boundingBox): boundingBox(boundingBox), next(nullptr){}
+
+    Node(): boundingBox(BoundingBox()), next(nullptr) {}
+    
 
 };
-
-Node* NodeConstractor(BoundingBox& boundingBox);
-
-Node* emptyNode();
 
 class LinkedList{
 
     public: 
-        Node* start;
-        Node* end;
+        std::shared_ptr<Node> start;
+        std::shared_ptr<Node> end;
         uint16_t length = 0;
 
         LinkedList();
@@ -40,7 +44,8 @@ class LinkedList{
 
         void insert(uint16_t index, BoundingBox boundingBox);
 
-        // ~LinkedList(); //TODO create destructor that frees all the list.
+        LinkedList operator=(const LinkedList& list);
+
 
 };
 

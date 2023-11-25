@@ -2,14 +2,13 @@
 
 Entity::Entity(uint16_t id, uint16_t type, BoundingBox boundingBox) : id(id), type(type){
     this->setBox(boundingBox);
-    this->trajectory = LinkedList(boundingBox);
-    
+    this->trajectory = std::make_shared<LinkedList>(boundingBox);
 }
 
 Entity::Entity() : id(UINT16_MAX), type(UINT16_MAX){
     //generates empty enitity
     this->boundingBox = BoundingBox();
-    
+    this->trajectory = std::make_shared<LinkedList>();
 }
 
 void Entity::setBox(BoundingBox boundingBox){
@@ -17,7 +16,7 @@ void Entity::setBox(BoundingBox boundingBox){
 }
 
 void Entity::addToTrajectory(){
-    this->trajectory.append(this->boundingBox);
+    this->trajectory->prepend(this->boundingBox);
 }
 
 BoundingBox Entity::getBoundingBox(){
@@ -78,3 +77,4 @@ Entity Entity::findClosest(std::vector<Entity> &entityVector){
 
     return closet;
 }
+

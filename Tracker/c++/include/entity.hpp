@@ -16,7 +16,7 @@ class Entity{
         BoundingBox boundingBox;
 
     public:
-        LinkedList trajectory;
+        std::shared_ptr<LinkedList> trajectory;
 
         Entity(uint16_t id, uint16_t type, BoundingBox box);
 
