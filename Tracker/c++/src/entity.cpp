@@ -11,6 +11,15 @@ Entity::Entity() : id(UINT16_MAX), type(UINT16_MAX){
     this->trajectory = std::make_shared<LinkedList>();
 }
 
+Entity::Entity(const Entity& e) : id(e.getId()), type(e.getType()){
+    this->setBox(e.getBoundingBox());
+    this->trajectory = e.getTrajetctory();
+}
+
+std::shared_ptr<LinkedList> Entity::getTrajetctory(){
+    return this->trajectory;
+}
+
 void Entity::setBox(BoundingBox boundingBox){
     this->boundingBox = boundingBox;
 }
@@ -29,6 +38,10 @@ const uint16_t Entity::getId(){
 
 const uint16_t Entity::getType(){
     return this->type;
+}
+
+std::shared_ptr<LinkedList> Entity::getTrajetctory() const{
+    return this->trajectory;
 }
 
 BoundingBox Entity::getBoundingBox() const{
@@ -57,6 +70,7 @@ std::ostream& operator<<(std::ostream& os, const Entity t){
 }
 
 Entity Entity::operator=(const Entity& e){
+    std::cout << *this;
     return e;
 }
 

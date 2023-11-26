@@ -17,6 +17,8 @@ class Entity{
 
     public:
         std::shared_ptr<LinkedList> trajectory;
+        
+        Entity(const Entity& e);
 
         Entity(uint16_t id, uint16_t type, BoundingBox box);
 
@@ -30,6 +32,10 @@ class Entity{
 
         const uint16_t getType();
 
+        std::shared_ptr<LinkedList> getTrajetctory();
+
+        std::shared_ptr<LinkedList> getTrajetctory() const;
+
         BoundingBox getBoundingBox() const;
 
         const uint16_t getId() const;
@@ -40,13 +46,13 @@ class Entity{
 
         vector<short> getVelocities();
 
-        void addToTrajectory();    
+        void addToTrajectory();     
 
         uint squareDistanceTo(Entity &e);
 
         Entity operator=(const Entity& e);
-
-        Entity findClosest(std::vector<Entity>  &entityVector);
+        
+        Entity findClosest(std::vector<Entity> &entityVector);
 
 };
 
