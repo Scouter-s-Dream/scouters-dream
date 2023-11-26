@@ -184,7 +184,7 @@ void Tracker::track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
 
 		this->drawBoundingBoxes();
 		cv::imshow("frame", this->img);
-		cv::waitKey(1);
+		cv::waitKey(0);
 	}
 	this->currentEntities.clear();
 	/*
