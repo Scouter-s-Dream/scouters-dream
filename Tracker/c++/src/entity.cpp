@@ -1,6 +1,7 @@
 #include "entity.hpp"
 
-Entity::Entity(uint16_t id, uint16_t type, BoundingBox boundingBox) : id(id), type(type){
+Entity::Entity(uint16_t id, uint16_t type, BoundingBox boundingBox) 
+    : id(id), type(type){
     this->setBox(boundingBox);
     this->trajectory = std::make_shared<LinkedList>(boundingBox);
 }
@@ -26,6 +27,7 @@ void Entity::setBox(BoundingBox boundingBox){
 
 void Entity::addToTrajectory(){
     this->trajectory->prepend(this->boundingBox);
+    std::cout << "CURRENTLY DOINT NOTHING\n";
 }
 
 BoundingBox Entity::getBoundingBox(){
@@ -60,25 +62,9 @@ uint Entity::squareDistanceTo(Entity &e){
     return this->getBoundingBox().squareDistanceTo(e.getBoundingBox());
 }
 
-std::ostream& operator<<(std::ostream& os, const Entity t){
-    // Printing all the elements
-    // using <<
-    os << "id: " << t.getId() << "\n";
-    os << "type: " << t.getType() << "\n";
-    os << "box: " << t.getBoundingBox() << "\n";
-    return os;
-}
-
-Entity Entity::operator=(const Entity& e){
-    std::cout << *this;
-    return e;
-}
-
-Entity Entity::findClosest(std::vector<Entity> &entityVector){
-    // uint16_t maxDistance = this->getBoundingBox().getWidth();
-    vector<Entity> newEntityVector;
+Entity Entity::findClosest(std::vector<Entity>& entityVector){
     uint16_t distance = UINT16_MAX;
-    uint16_t idx = entityVector.size(); // not in array.
+    uint16_t idx = entityVector.size() - 1; 
     for (uint16_t i = 0, size = entityVector.size(); i < size; i++){
         uint currentDistance = this->squareDistanceTo(entityVector[i]);
         if (currentDistance < distance){
@@ -87,8 +73,13 @@ Entity Entity::findClosest(std::vector<Entity> &entityVector){
         }
     }
     Entity closet = entityVector[idx];
-    entityVector[idx] = Entity();
-
+    entityVector[idx].setBox(BoundingBox());
     return closet;
 }
 
+std::ostream& operator<<(std::ostream& os, const Entity t){
+    os << "id: " << t.getId() << "\n";
+    os << "type: " << t.getType() << "\n";
+    os << "box: " << t.getBoundingBox() << "\n";
+    return os;
+}

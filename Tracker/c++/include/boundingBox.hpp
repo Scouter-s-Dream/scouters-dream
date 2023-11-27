@@ -42,8 +42,6 @@ class BoundingBox{
 
         bool isCloseTo(BoundingBox b, double distance);
 
-        // BoundingBox operator=(const BoundingBox& box);
-
 };
 
 std::ostream& operator<<(std::ostream& os, BoundingBox boundingBox);

@@ -148,12 +148,9 @@ std::vector<BoundingBox> pointsToBoundingBoxes(uint16_t *pointsWithClass, uint16
 	
 	std::vector<BoundingBox> boundingBoxes;
     boundingBoxes.reserve(size);
-    cout << "size: " << size << "\n";
-
 	for (uint i = 0; i < size; i++){
         boundingBoxes.emplace_back(pointsWithClass + i*POINTCLASS_SIZE);
 	}
-    
 	return boundingBoxes;
 
 }
@@ -174,7 +171,3 @@ std::ostream& operator<<(std::ostream& os, BoundingBox boundingBox){
     os << "Center: [" << boundingBox.getCenter()[0] << ", " << boundingBox.getCenter()[1] << "]\n"; 
     return os;
 }
-
-// BoundingBox BoundingBox::operator=(const BoundingBox& box){
-//     return box;
-// }

@@ -7,8 +7,8 @@ using std::cout, std::endl;
 
 Tracker::Tracker(uint16_t* pointsWithClass, uint16_t size, uint8_t* img, uint16_t rows, uint16_t cols, bool visualize) 
 	: visualize(visualize), rows(rows), cols(cols){
-	setTrackPoints(pointsWithClass, size);
-	setImg(img);
+	this->setTrackPoints(pointsWithClass, size);
+	this->setImg(img);
 	this->entities = vector<Entity> (this->currentEntities);
 	this->addToTrajectory();
 }
@@ -23,6 +23,7 @@ std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> bou
 	for (uint16_t i = 0, size = boundingBoxes.size(); i < size; i++){
         entities.emplace_back(i, pointsWithClass[POINTCLASS_SIZE*i + POINT_SIZE], boundingBoxes[i]);
 	}
+
 	return entities;
 }
 
@@ -144,9 +145,8 @@ void Tracker::track_by_distance(){
 
 	uint16_t size = this->entities.size();
 	// uint16_t newSize = this->currentEntities.size();
-	std::vector<Entity> copy(this->currentEntities); 
 	for (uint16_t i = 0; i < size; i++){
-		entities[i].setBox(entities[i].findClosest(copy).getBoundingBox());
+		this->entities[i].setBox(this->entities[i].findClosest(this->currentEntities).getBoundingBox());
 	}
 
 

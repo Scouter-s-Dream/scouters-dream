@@ -1,10 +1,8 @@
 #ifndef __ENTITY__HPP__
 #define __ENTITY__HPP__
 
-#include "boundingBox.hpp"
 #include "linkedList.hpp"
 #include <limits>
-#include "vectorFuncs.hpp"
 
 class Entity{
 
@@ -50,9 +48,9 @@ class Entity{
 
         uint squareDistanceTo(Entity &e);
 
-        Entity operator=(const Entity& e);
+        // Entity operator=(const Entity& e);
         
-        Entity findClosest(std::vector<Entity> &entityVector);
+        Entity findClosest(std::vector<Entity>& entityVector);
 
 };
 
