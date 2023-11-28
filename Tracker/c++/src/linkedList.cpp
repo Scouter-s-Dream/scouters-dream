@@ -1,16 +1,12 @@
 #include "linkedList.hpp"
 
-LinkedList LinkedList::operator=(const LinkedList& list){
-    return list;
-}
-
 LinkedList::LinkedList(){
     std::shared_ptr<Node> newNode = std::make_shared<Node>();
     this->start = newNode;
     this->end = newNode;
 }
 
-LinkedList::LinkedList(BoundingBox& boundingBox){
+LinkedList::LinkedList(Rect& boundingBox){
     std::shared_ptr<Node> newNode = std::make_shared<Node>(boundingBox);
     this->start = newNode;
     this->end = newNode;
@@ -32,7 +28,7 @@ Node LinkedList::getItem(uint16_t index){
 
 }
 
-void LinkedList::append(BoundingBox boundingBox){
+void LinkedList::append(Rect boundingBox){
     std::shared_ptr<Node> newNode = std::make_shared<Node>(boundingBox); 
     this->end->next = newNode;
     this->end = newNode;
@@ -62,14 +58,14 @@ void LinkedList::remove(uint16_t index){
     
 }
 
-void LinkedList::prepend(BoundingBox boundingBox){
+void LinkedList::prepend(Rect boundingBox){
     std::shared_ptr<Node> newNode = std::make_shared<Node>(boundingBox);
     newNode->next = this->start;    
     this->start = newNode;
     this->length++;
 }
 
-void LinkedList::insert(uint16_t index, BoundingBox boundingBox){
+void LinkedList::insert(uint16_t index, Rect boundingBox){
     if (index > this->length || index < 0){
         throw "Out of Bounds";
     }

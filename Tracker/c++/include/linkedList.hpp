@@ -1,22 +1,23 @@
 #ifndef __LINKED_LIST_HPP
 #define __LINKED_LIST_HPP
 
-#include "boundingBox.hpp"
+#include "rectExtention.hpp"
 #include <memory>
 
 typedef struct Node Node;
+typedef cv::Size2i Velocity2D;
 
 struct Node{
     
     const vector<short> velocities;
-    const BoundingBox boundingBox;
+    const Rect rect;
     std::shared_ptr<struct Node> next;
 
-    Node(BoundingBox boundingBox, Node* next): boundingBox(boundingBox), next(nullptr) {}
+    Node(Rect rect, Node* next): rect(rect), next(nullptr) {}
 
-    Node(BoundingBox boundingBox): boundingBox(boundingBox), next(nullptr){}
+    Node(Rect rect): rect(rect), next(nullptr){}
 
-    Node(): boundingBox(BoundingBox()), next(nullptr) {}
+    Node(): rect(Rect()), next(nullptr) {}
     
 
 };
@@ -30,22 +31,17 @@ class LinkedList{
 
         LinkedList();
 
-        LinkedList(Node Node);
-
-        LinkedList(BoundingBox& boundingBox);
+        LinkedList(Rect& rect);
 
         Node getItem(uint16_t index);
 
-        void append(BoundingBox boundingBox);
+        void append(Rect rect);
 
         void remove(uint16_t index);
 
-        void prepend(BoundingBox boundingBox);
+        void prepend(Rect rect);
 
-        void insert(uint16_t index, BoundingBox boundingBox);
-
-        LinkedList operator=(const LinkedList& list);
-
+        void insert(uint16_t index, Rect rect);
 
 };
 
