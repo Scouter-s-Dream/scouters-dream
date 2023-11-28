@@ -1,35 +1,31 @@
 #include "entity.hpp"
 
-Entity::Entity(uint16_t id, uint16_t type, BoundingBox boundingBox) : id(id), type(type){
-    this->setBox(boundingBox);
-    this->trajectory = std::make_shared<LinkedList>(boundingBox);
+Entity::Entity(uint16_t id, uint16_t type, Rect boundingRect) 
+    : id(id), type(type){
+    this->setBoundingRect(boundingRect);
+    this->trajectory = std::make_shared<LinkedList>(boundingRect);
 }
 
-Entity::Entity() : id(UINT16_MAX), type(UINT16_MAX){
-    //generates empty enitity
-    this->boundingBox = BoundingBox();
+Entity::Entity() 
+    : id(UINT16_MAX), type(UINT16_MAX){
+    this->boundingRect = Rect();
     this->trajectory = std::make_shared<LinkedList>();
-}
-
-Entity::Entity(const Entity& e) : id(e.getId()), type(e.getType()){
-    this->setBox(e.getBoundingBox());
-    this->trajectory = e.getTrajetctory();
 }
 
 std::shared_ptr<LinkedList> Entity::getTrajetctory(){
     return this->trajectory;
 }
 
-void Entity::setBox(BoundingBox boundingBox){
-    this->boundingBox = boundingBox;
+void Entity::setBoundingRect(Rect boundningRect){
+    this->boundingRect = boundningRect;
 }
 
 void Entity::addToTrajectory(){
-    this->trajectory->prepend(this->boundingBox);
+    this->trajectory->prepend(this->boundingRect);
 }
 
-BoundingBox Entity::getBoundingBox(){
-    return this->boundingBox;
+Rect& Entity::getBoundingRect(){
+    return this->boundingRect;
 }
 
 const uint16_t Entity::getId(){
@@ -44,8 +40,8 @@ std::shared_ptr<LinkedList> Entity::getTrajetctory() const{
     return this->trajectory;
 }
 
-BoundingBox Entity::getBoundingBox() const{
-    return this->boundingBox;
+Rect Entity::getBoundingRect() const{
+    return this->boundingRect;
 }
 
 const uint16_t Entity::getId() const{
@@ -56,26 +52,19 @@ const uint16_t Entity::getType() const{
     return this->type;
 }
 
-uint Entity::squareDistanceTo(Entity &e){
-    return this->getBoundingBox().squareDistanceTo(e.getBoundingBox());
+uint Entity::squareDistanceTo(Entity& e){
+    return this->getBoundingRect().squareDistanceTo(e.getBoundingRect());
 }
 
-std::ostream& operator<<(std::ostream& os, const Entity t){
-    // Printing all the elements
-    // using <<
-    os << "id: " << t.getId() << "\n";
-    os << "type: " << t.getType() << "\n";
-    os << "box: " << t.getBoundingBox() << "\n";
+std::ostream& operator<<(std::ostream& os, Entity& e){
+    os << "id: " << e.getId() << "\n";
+    os << "type: " << e.getType() << "\n";
+    os << "box: " << e.getBoundingRect() << "\n";
     return os;
 }
 
-Entity Entity::operator=(const Entity& e){
-    std::cout << *this;
-    return e;
-}
-
 Entity Entity::findClosest(std::vector<Entity> &entityVector){
-    // uint16_t maxDistance = this->getBoundingBox().getWidth();
+    // uint16_t maxDistance = this->getRect().getWidth();
     vector<Entity> newEntityVector;
     uint16_t distance = UINT16_MAX;
     uint16_t idx = entityVector.size(); // not in array.
@@ -87,7 +76,7 @@ Entity Entity::findClosest(std::vector<Entity> &entityVector){
         }
     }
     Entity closet = entityVector[idx];
-    entityVector[idx] = Entity();
+    entityVector[idx].setBoundingRect(Rect());
 
     return closet;
 }

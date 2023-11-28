@@ -1,10 +1,10 @@
 #ifndef __ENTITY__HPP__
 #define __ENTITY__HPP__
 
-#include "boundingBox.hpp"
 #include "linkedList.hpp"
 #include <limits>
 #include "vectorFuncs.hpp"
+#include <opencv4/opencv2/opencv.hpp>
 
 class Entity{
 
@@ -12,39 +12,37 @@ class Entity{
 
         const uint16_t id;
         const uint16_t type;
-        vector<short> velocities;
-        BoundingBox boundingBox;
+        Velocity2D velocities;
+        Rect boundingRect;
+        std::shared_ptr<LinkedList> trajectory;
 
     public:
-        std::shared_ptr<LinkedList> trajectory;
         
-        Entity(const Entity& e);
-
-        Entity(uint16_t id, uint16_t type, BoundingBox box);
+        Entity(uint16_t id, uint16_t type, Rect BoundingRect);
 
         Entity();
         
-        void setBox(BoundingBox boundingBox);
+        void setBoundingRect(Rect newBoundingRect);
 
-        BoundingBox getBoundingBox();
+        void setVelocity();
+
+        Rect& getBoundingRect();
 
         const uint16_t getId();
 
         const uint16_t getType();
 
+        Velocity2D getVelocities();
+
         std::shared_ptr<LinkedList> getTrajetctory();
 
-        std::shared_ptr<LinkedList> getTrajetctory() const;
-
-        BoundingBox getBoundingBox() const;
+        Rect getBoundingRect() const;
 
         const uint16_t getId() const;
 
         const uint16_t getType() const;
 
-        void setVelocity();
-
-        vector<short> getVelocities();
+        std::shared_ptr<LinkedList> getTrajetctory() const;
 
         void addToTrajectory();     
 
@@ -53,8 +51,9 @@ class Entity{
         Entity operator=(const Entity& e);
         
         Entity findClosest(std::vector<Entity> &entityVector);
-
+        
 };
 
+std::ostream& operator<<(std::ostream& os, Entity& e);
 
 #endif
