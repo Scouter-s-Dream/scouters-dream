@@ -21,6 +21,7 @@ std::vector<Entity> Tracker::rectsToEntites(std::vector<Rect> rects, uint16_t* c
 	for (uint16_t i = 0, size = rects.size(); i < size; i++){
         entities.emplace_back(i, classes[i], rects[i]);
 	}
+
 	return entities;
 }
 

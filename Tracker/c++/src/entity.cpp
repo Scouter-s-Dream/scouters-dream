@@ -67,7 +67,7 @@ Entity Entity::findClosest(std::vector<Entity> &entityVector){
     // uint16_t maxDistance = this->getRect().getWidth();
     vector<Entity> newEntityVector;
     uint16_t distance = UINT16_MAX;
-    uint16_t idx = entityVector.size(); // not in array.
+    uint16_t idx = entityVector.size() - 1; 
     for (uint16_t i = 0, size = entityVector.size(); i < size; i++){
         uint currentDistance = this->squareDistanceTo(entityVector[i]);
         if (currentDistance < distance){
@@ -81,3 +81,9 @@ Entity Entity::findClosest(std::vector<Entity> &entityVector){
     return closet;
 }
 
+std::ostream& operator<<(std::ostream& os, const Entity t){
+    os << "id: " << t.getId() << "\n";
+    os << "type: " << t.getType() << "\n";
+    os << "box: " << t.getBoundingRect() << "\n";
+    return os;
+}
