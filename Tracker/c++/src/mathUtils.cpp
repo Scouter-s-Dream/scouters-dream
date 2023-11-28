@@ -9,6 +9,6 @@ Args:
 Returns:
  - `squareDistance (uint)` -> the distance between the points.
 */
-uint squareDistance(vector<uint16_t> pointA, vector<uint16_t> pointB){
-    return pow(pointA[0] - pointB[0], 2) + pow(pointA[1] - pointB[1], 2);
+uint squareDistance(Point A, Point B){
+    return pow(A.x - B.x, 2) + pow(A.y - B.y, 2);
 }
