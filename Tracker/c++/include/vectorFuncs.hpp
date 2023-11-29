@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 
+using std::cout;
 using std::vector;
 
 template<typename T2>
