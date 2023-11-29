@@ -63,25 +63,31 @@ std::ostream& operator<<(std::ostream& os, Entity& e){
     return os;
 }
 
-Entity Entity::findClosest(std::vector<Entity> &entityVector){
-    // uint16_t maxDistance = this->getRect().getWidth();
-    vector<Entity> newEntityVector;
-    uint16_t distance = UINT16_MAX;
-    uint16_t idx = entityVector.size() - 1; 
-    for (uint16_t i = 0, size = entityVector.size(); i < size; i++){
-        uint currentDistance = this->squareDistanceTo(entityVector[i]);
-        if (currentDistance < distance){
-            idx = i;
-            distance = currentDistance;
-        }
-    }
-    Entity closet = entityVector[idx];
-    entityVector[idx].setBoundingRect(Rect());
-
-    return closet;
+void Entity::emptyBoundingRect(){
+    this->setBoundingRect(Rect());
 }
 
-std::ostream& operator<<(std::ostream& os, const Entity t){
+uint16_t Entity::findClosestEntityIndex(std::vector<Entity> &entityVector){
+
+    uint16_t maxDistance = UINT16_MAX; //TODO MAKE A SOMEHOW CALCULATED ONE
+    uint16_t distance = UINT16_MAX;
+    uint16_t idx = entityVector.size() - 1; 
+
+    for (uint16_t i = 0, size = entityVector.size(); i < size; i++){
+        Entity& checkedEntity = entityVector[i];
+        if (!entityVector[i].getBoundingRect().empty() && this->getType() == checkedEntity.getType()) {
+            uint currentDistance = this->squareDistanceTo(checkedEntity);
+            if (currentDistance < distance && currentDistance <= maxDistance){
+                idx = i;
+                distance = currentDistance;
+            }
+        }       
+    }
+
+    return idx;
+}
+
+std::ostream& operator<<(std::ostream& os, const Entity& t){
     os << "id: " << t.getId() << "\n";
     os << "type: " << t.getType() << "\n";
     os << "box: " << t.getBoundingRect() << "\n";

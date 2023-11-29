@@ -50,10 +50,12 @@ class Entity{
 
         // Entity operator=(const Entity& e);
         
-        Entity findClosest(std::vector<Entity>& entityVector);
+        uint16_t findClosestEntityIndex(std::vector<Entity> &entityVector);
+
+        void emptyBoundingRect();
         
 };
 
-std::ostream& operator<<(std::ostream& os, Entity& e);
+std::ostream& operator<<(std::ostream& os, const Entity& e);
 
 #endif
