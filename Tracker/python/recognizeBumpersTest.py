@@ -18,6 +18,12 @@ def prepFrame(frame):
     # frame = cv2.resize(frame, (1280, 500))
     return frame
 
+def YoloToPointsAndTypes(YOLO_result):
+        boxes = YOLO_result.boxes.cpu().numpy()      
+        points = np.array(boxes.xyxy, dtype=np.uint16)
+        types = np.array(boxes.cls, dtype=np.uint16)
+        return (points, types, len(types))
+
 if success:
     
     frame = prepFrame(frame)
@@ -38,4 +44,17 @@ while cap.isOpened():
         print("CALLED PYTHON --------------------------")
         t = time()
         tracker.track(resultsB[0], frame)
+        
+        # points, types, size = YoloToPointsAndTypes(resultsB[0])
+        
+        # for i in range(len(types)):
+        #     color = (255, 0, 0)
+        #     if types[i] == 1:
+        #         color = (0, 0, 255)
+                
+        #     frame = cv2.rectangle(frame, points[i][:2], points[i][2:], color, 2)
+
+        # cv2.imshow("python", frame)
+        # cv2.waitKey(1)
+            
         print(time() - t)
