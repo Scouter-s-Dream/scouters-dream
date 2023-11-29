@@ -1,13 +1,10 @@
 #include "tracker.hpp"
-#include <string>
-#include <sstream>
-#include <iostream>
 
 using std::cout, std::endl;
 
-Tracker::Tracker(uint16_t* pointsWithClass, uint16_t size, uint8_t* img, uint16_t rows, uint16_t cols, bool visualize) 
+Tracker::Tracker(uint16_t* points, uint16_t* types, uint16_t size, uint8_t* img, uint16_t rows, uint16_t cols, bool visualize) 
 	: visualize(visualize), rows(rows), cols(cols){
-	setTrackPoints(pointsWithClass, size);
+	setTrackPoints(points, types, size);
 	setImg(img);
 	this->entities = vector<Entity> (this->currentEntities);
 	this->addToTrajectory();
@@ -17,37 +14,45 @@ void Tracker::setImg(uint8_t* img){
 	this->img = cv::Mat(this->rows, this->cols, CV_8UC3, img);	
 }
 
-std::vector<Entity> Tracker::boundingBoxesToEntites(std::vector<BoundingBox> boundingBoxes, uint16_t* pointsWithClass){
+std::vector<Entity> Tracker::rectsToEntites(std::vector<Rect> rects, uint16_t* classes){
 	std::vector<Entity> entities;
-    entities.reserve(boundingBoxes.size());
-	for (uint16_t i = 0, size = boundingBoxes.size(); i < size; i++){
-        entities.emplace_back(i, pointsWithClass[POINTCLASS_SIZE*i + POINT_SIZE], boundingBoxes[i]);
+    entities.reserve(rects.size());
+
+	for (uint16_t i = 0, size = rects.size(); i < size; i++){
+        entities.emplace_back(i, classes[i], rects[i]);
 	}
 
 	return entities;
 }
 
 /*
-Sets the current BoundingBoxes of the tracker
+Sets the current Rectes of the tracker
 -
 Args: 
  - `pointsWithClass (uint[])` -> xywh points with classes [x, y, w, h, c].
  - `size (uint)` -> How many points are in the array (Size of the array / size of a point).
 */
-void Tracker::setTrackPoints(uint16_t *pointsWithClass, uint16_t size){
-	this->currentEntities = boundingBoxesToEntites(pointsToBoundingBoxes(pointsWithClass, size), pointsWithClass); //sets the currentStableStack inside stablePoints.
+void Tracker::setTrackPoints(uint16_t *points, uint16_t* types, uint16_t size){
+	this->currentEntities = rectsToEntites(pointsToRects(points, size), types); //sets the currentStableStack inside stablePoints.
 }
 
-void Tracker::drawBoundingBoxes(){
+void Tracker::drawRectes(){
 	for (uint16_t i = 0, size = this->entities.size(); i < size; i++){
-		uint16_t x = this->entities[i].getBoundingBox().getBox()[0] - this->entities[i].getBoundingBox().getBox()[2] / 2;
-		uint16_t y = this->entities[i].getBoundingBox().getBox()[1] - this->entities[i].getBoundingBox().getBox()[3] / 2;
-		uint16_t w = this->entities[i].getBoundingBox().getBox()[2];
-		uint16_t h = this->entities[i].getBoundingBox().getBox()[3];
-		cv::Rect2i rect(x, y, w, h);
-		cv::rectangle(this->img, rect, CV_RGB(255, 0, 255), 2);
-		cv::Point2i centerPoint(this->entities[i].getBoundingBox().getBox()[0], this->entities[i].getBoundingBox().getBox()[1]);
-		cv::putText(this->img, std::to_string(this->entities[i].getId()), centerPoint, cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(0, 255, 255), 2);
+		Entity& drawnEntity = this->entities[i];
+		cv::Scalar color;
+		switch (drawnEntity.getType()){
+			case RedRobot:
+				color = CV_RGB(255, 0, 0);
+				break;
+			case BlueRobot:
+				color = CV_RGB(0, 0, 255);
+				break;
+			default:
+				color = CV_RGB(255, 255, 255);
+		}
+		
+		cv::rectangle(this->img, drawnEntity.getBoundingRect(), color, 2);
+		cv::putText(this->img, std::to_string(drawnEntity.getId()), drawnEntity.getBoundingRect().tl(), cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(255, 255, 0), 2);
 	}
 }
 
@@ -62,25 +67,25 @@ Returns:
 - `All points between LocA and locB are similar.`
 
 */
-uint* Tracker::findSimilarBoundingBoxes(){return new uint(0);}
+uint* Tracker::findSimilarRectes(){return new uint(0);}
 
 // 	uint16_t reduced = 0;
 // 	uint16_t index = 0;
 // 	const uint distance = 150;
-// 	uint* similar = new uint[this->numOfCurrentBoundingBoxes + 1]; // [locA, locB, locA, locB] (locA and locB are similar).
+// 	uint* similar = new uint[this->numOfCurrentRectes + 1]; // [locA, locB, locA, locB] (locA and locB are similar).
 
-// 	for (uint i = 0, size = this->numOfCurrentBoundingBoxes; i < size ; i++){
+// 	for (uint i = 0, size = this->numOfCurrentRectes; i < size ; i++){
 		
 // 		similar[i] = size + 1; 
 
-// 		if (this->currentBoundingBoxes[i].isCloseTo(this->currentBoundingBoxes[i+1], distance)){
+// 		if (this->currentRectes[i].isCloseTo(this->currentRectes[i+1], distance)){
 
 // 			similar[index] = i;
 // 			similar[index + 1] = i + 1;
 
 // 			for (uint k = i + 1; k < size - i -1 ; k++){
 
-// 				if (this->currentBoundingBoxes[k].isCloseTo(this->currentBoundingBoxes[k+1], distance) && this->currentBoundingBoxes[i].isCloseTo(this->currentBoundingBoxes[i+1], (distance-50) * (k-i+1.5))){
+// 				if (this->currentRectes[k].isCloseTo(this->currentRectes[k+1], distance) && this->currentRectes[i].isCloseTo(this->currentRectes[i+1], (distance-50) * (k-i+1.5))){
 					
 // 					similar[index + 1] = k + 1;
 
@@ -105,14 +110,14 @@ uint* Tracker::findSimilarBoundingBoxes(){return new uint(0);}
 
 // 	}
 
-// 	similar[this->numOfCurrentBoundingBoxes] = reduced;
+// 	similar[this->numOfCurrentRectes] = reduced;
 
 // 	return similar;
 
 // }
 
 /*
-Stables the BoundingBoxes that are stored in stableBoundingBoxes
+Stables the Rectes that are stored in stableRectes
 -
 */
 
@@ -121,23 +126,23 @@ Stables the BoundingBoxes that are stored in stableBoundingBoxes
 
 void Tracker::stablePoints(){}
 
-// 	uint *similar = this->findSimilarBoundingBoxes();
+// 	uint *similar = this->findSimilarRectes();
 // 	uint constant = 0;
-// 	this->stableBoundingBoxes.reserve(this->numOfCurrentBoundingBoxes);
+// 	this->stableRectes.reserve(this->numOfCurrentRectes);
 	
-// 	for (uint real = 0, size = this->numOfCurrentBoundingBoxes, reduced = similar[size]; real < size - reduced; real++){
+// 	for (uint real = 0, size = this->numOfCurrentRectes, reduced = similar[size]; real < size - reduced; real++){
 // 		if (real == similar[real] + constant){
-// 			avrageBoundingBoxes(this->stableBoundingBoxes[real], this->currentBoundingBoxes, similar[real] + constant, similar[real+1] + constant);
+// 			avrageRectes(this->stableRectes[real], this->currentRectes, similar[real] + constant, similar[real+1] + constant);
 // 			constant += (similar[real+1] - similar[real]);
 // 		}
 // 		else{
-// 			this->stableBoundingBoxes[real].setBox(this->currentBoundingBoxes[real + constant].getBox());
+// 			this->stableRectes[real].setBox(this->currentRectes[real + constant].getBox());
 // 		}
 		
 // 	}
 	
-// 	this->numOfLastStableBoundingBoxes = this->numOfStableBoundingBoxes;
-// 	this-> numOfStableBoundingBoxes = this->numOfCurrentBoundingBoxes - similar[this->numOfCurrentBoundingBoxes];
+// 	this->numOfLastStableRectes = this->numOfStableRectes;
+// 	this-> numOfStableRectes = this->numOfCurrentRectes - similar[this->numOfCurrentRectes];
 // 	delete[] similar;
 // }
 
@@ -145,9 +150,10 @@ void Tracker::track_by_distance(){
 
 	uint16_t size = this->entities.size();
 	// uint16_t newSize = this->currentEntities.size();
-	std::vector<Entity> copy(this->currentEntities); 
 	for (uint16_t i = 0; i < size; i++){
-		entities[i].setBox(entities[i].findClosest(copy).getBoundingBox());
+		Entity& closetEntity = this->currentEntities[entities[i].findClosestEntityIndex(this->currentEntities)];
+		entities[i].setBoundingRect(closetEntity.getBoundingRect());
+		closetEntity.emptyBoundingRect();
 	}
 
 
@@ -157,7 +163,7 @@ void Tracker::track_by_distance(){
 
 	// 	for (uint16_t i = size; i < newSize - size; i++){
 	// 		Entity newEntity = this->currentEntities[i - size + 1];
-	// 		this->entitys.emplace_back(size + 1, newEntity.getType(), newEntity.getBoundingBox());
+	// 		this->entitys.emplace_back(size + 1, newEntity.getType(), newEntity.getRect());
 	// 	}
 	// } 
 
@@ -171,9 +177,9 @@ void Tracker::addToTrajectory(){
  
 //TODO using a lot of shared pointers - performence heavy.
 //TODO imporve all function performence!.
-void Tracker::track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
+void Tracker::track(uint16_t* points, uint16_t* types, uint16_t size, uint8_t* img){
 	
-	this->setTrackPoints(pointsWithClasses, size);
+	this->setTrackPoints(points, types, size);
 
 	this->setImg(img);
 
@@ -183,9 +189,9 @@ void Tracker::track(uint16_t* pointsWithClasses, uint16_t size, uint8_t* img){
 	
 	if (this->visualize){
 
-		this->drawBoundingBoxes();
+		this->drawRectes();
 		cv::imshow("frame", this->img);
-		cv::waitKey(0);
+		cv::waitKey(1);
 	}
 	this->currentEntities.clear();
 	/*
