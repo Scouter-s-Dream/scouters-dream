@@ -69,13 +69,14 @@ void Entity::emptyBoundingRect(){
 
 uint16_t Entity::findClosestEntityIndex(std::vector<Entity> &entityVector){
 
-    uint16_t maxDistance = UINT16_MAX; //TODO MAKE A SOMEHOW CALCULATED ONE
+    uint16_t maxDistance = 200; //TODO MAKE A SOMEHOW CALCULATED ONE
     uint16_t distance = UINT16_MAX;
     uint16_t idx = entityVector.size() - 1; 
 
     for (uint16_t i = 0, size = entityVector.size(); i < size; i++){
         Entity& checkedEntity = entityVector[i];
-        if (!entityVector[i].getBoundingRect().empty() && this->getType() == checkedEntity.getType()) {
+        if (this->getType() == checkedEntity.getType()) {
+            cout << checkedEntity.getType() << " " << this->getType() << "\n";
             uint currentDistance = this->squareDistanceTo(checkedEntity);
             if (currentDistance < distance && currentDistance <= maxDistance){
                 idx = i;
@@ -83,7 +84,7 @@ uint16_t Entity::findClosestEntityIndex(std::vector<Entity> &entityVector){
             }
         }       
     }
-
+    std::cin.get();
     return idx;
 }
 

@@ -10,8 +10,8 @@ class Entity{
 
     private:
 
-        const uint16_t id;
-        const uint16_t type;
+        uint16_t id;
+        uint16_t type;
         Velocity2D velocities;
         Rect boundingRect;
         std::shared_ptr<LinkedList> trajectory;
@@ -47,8 +47,6 @@ class Entity{
         void addToTrajectory();     
 
         uint squareDistanceTo(Entity &e);
-
-        // Entity operator=(const Entity& e);
         
         uint16_t findClosestEntityIndex(std::vector<Entity> &entityVector);
 

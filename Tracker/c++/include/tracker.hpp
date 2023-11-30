@@ -18,7 +18,7 @@ class Tracker{
         const uint16_t cols;
         cv::Mat img;
         vector<Entity> entities;
-        vector<Entity> currentEntities;
+        vector<Entity> currentRecognition;
 
         Tracker(uint16_t* points, uint16_t* types, uint16_t size, uint8_t* img, uint16_t rows, uint16_t cols, bool visualize);
 

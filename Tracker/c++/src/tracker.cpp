@@ -6,7 +6,7 @@ Tracker::Tracker(uint16_t* points, uint16_t* types, uint16_t size, uint8_t* img,
 	: visualize(visualize), rows(rows), cols(cols){
 	setTrackPoints(points, types, size);
 	setImg(img);
-	this->entities = vector<Entity> (this->currentEntities);
+	this->entities = vector<Entity> (this->currentRecognition);
 	this->addToTrajectory();
 }
 
@@ -33,7 +33,7 @@ Args:
  - `size (uint)` -> How many points are in the array (Size of the array / size of a point).
 */
 void Tracker::setTrackPoints(uint16_t *points, uint16_t* types, uint16_t size){
-	this->currentEntities = rectsToEntites(pointsToRects(points, size), types); //sets the currentStableStack inside stablePoints.
+	this->currentRecognition = rectsToEntites(pointsToRects(points, size), types); //sets the currentStableStack inside stablePoints.
 }
 
 void Tracker::drawRectes(){
@@ -149,11 +149,18 @@ void Tracker::stablePoints(){}
 void Tracker::track_by_distance(){
 
 	uint16_t size = this->entities.size();
-	// uint16_t newSize = this->currentEntities.size();
+	// uint16_t newSize = this->currentRecognition.size();
 	for (uint16_t i = 0; i < size; i++){
-		Entity& closetEntity = this->currentEntities[entities[i].findClosestEntityIndex(this->currentEntities)];
-		entities[i].setBoundingRect(closetEntity.getBoundingRect());
-		closetEntity.emptyBoundingRect();
+		Entity& checkedEntity = this->entities[i];
+		uint16_t closetEntityIndex = checkedEntity.findClosestEntityIndex(this->currentRecognition);
+		Entity& closetEntity = this->currentRecognition[closetEntityIndex];
+		checkedEntity.setBoundingRect(closetEntity.getBoundingRect());
+		currentRecognition.erase(currentRecognition.begin() + closetEntityIndex);
+		
+	}
+	if (currentRecognition.size() > 0){
+		cout << "------------------------------------------------------------\n";
+		std::cin.get();
 	}
 
 
@@ -162,7 +169,7 @@ void Tracker::track_by_distance(){
 	// 	std::cout << this->entitys.size() << "  " << newSize << "\n";
 
 	// 	for (uint16_t i = size; i < newSize - size; i++){
-	// 		Entity newEntity = this->currentEntities[i - size + 1];
+	// 		Entity newEntity = this->currentRecognition[i - size + 1];
 	// 		this->entitys.emplace_back(size + 1, newEntity.getType(), newEntity.getRect());
 	// 	}
 	// } 
@@ -193,7 +200,7 @@ void Tracker::track(uint16_t* points, uint16_t* types, uint16_t size, uint8_t* i
 		cv::imshow("frame", this->img);
 		cv::waitKey(1);
 	}
-	this->currentEntities.clear();
+	this->currentRecognition.clear();
 	/*
 		Tracker psudo code:
 
