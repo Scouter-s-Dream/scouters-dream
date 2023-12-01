@@ -1,12 +1,10 @@
 #include "tracker.hpp"
 
-using std::cout, std::endl;
-
 Tracker::Tracker(uint16_t* points, uint16_t* types, uint16_t size, uint8_t* img, uint16_t rows, uint16_t cols, bool visualize) 
 	: visualize(visualize), rows(rows), cols(cols){
 	setTrackPoints(points, types, size);
 	setImg(img);
-	this->entities = vector<Entity> (this->currentRecognition);
+	this->entities = vector<Entity>(this->currentRecognition);
 	this->addToTrajectory();
 }
 
@@ -36,7 +34,7 @@ void Tracker::setTrackPoints(uint16_t *points, uint16_t* types, uint16_t size){
 	this->currentRecognition = rectsToEntites(pointsToRects(points, size), types); //sets the currentStableStack inside stablePoints.
 }
 
-void Tracker::drawRectes(){
+void Tracker::drawEntities(){
 	for (uint16_t i = 0, size = this->entities.size(); i < size; i++){
 		Entity& drawnEntity = this->entities[i];
 		cv::Scalar color;
@@ -50,12 +48,31 @@ void Tracker::drawRectes(){
 			default:
 				color = CV_RGB(255, 255, 255);
 		}
-		
-		cv::rectangle(this->img, drawnEntity.getBoundingRect(), color, 2);
-		cv::putText(this->img, std::to_string(drawnEntity.getId()), drawnEntity.getBoundingRect().tl(), cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(255, 255, 0), 2);
+		drawnEntity.draw(this->img, color);
 	}
 }
 
+void Tracker::drawPredictions(){
+	if (!this->currentPrediction.empty()){
+		cout << "NO PREDICTIONS\n";
+		return;
+	}
+	for (uint16_t i = 0, size = this->entities.size(); i < size; i++){
+		Entity& drawnEntity = this->entities[i];
+		drawnEntity.draw(this->img, CV_RGB(255, 255, 255));
+	}
+}
+
+
+
+void Tracker::makePredictions(){
+	this->currentPrediction = vector<Entity>(this->entities);
+	for (Entity& e : this->currentPrediction){
+		e.clacVelocities();
+		e.setBoundingRect(e.predictNextBoundingRect());
+	}
+	
+}
 //TODO More Advenced func, need to know how to use 
 //CURRENTLY NOT WORKING!
 /*
@@ -146,27 +163,27 @@ void Tracker::stablePoints(){}
 // 	delete[] similar;
 // }
 
-void Tracker::track_by_distance(){
+void Tracker::distanceTrack(){
 
-	uint16_t size = this->entities.size();
+	// uint16_t size = this->entities.size();
 	// uint16_t newSize = this->currentRecognition.size();
+	uint16_t size = MIN(this->entities.size(), this->currentRecognition.size());
 	for (uint16_t i = 0; i < size; i++){
 		Entity& checkedEntity = this->entities[i];
 		uint16_t closetEntityIndex = checkedEntity.findClosestEntityIndex(this->currentRecognition);
 		Entity& closetEntity = this->currentRecognition[closetEntityIndex];
 		checkedEntity.setBoundingRect(closetEntity.getBoundingRect());
-		currentRecognition.erase(currentRecognition.begin() + closetEntityIndex);
-		
-	}
-	if (currentRecognition.size() > 0){
-		cout << "------------------------------------------------------------\n";
-		std::cin.get();
-	}
+		currentRecognition.erase(currentRecognition.begin() + closetEntityIndex);		
+}
+	// if (currentRecognition.empty()){
+	// 	cout << "------------------------------------------------------------\n";
+	// 	std::cin.get();
+	// }
 
 
 	// if (size < newSize){
 	// 	this->entitys.reserve(newSize);
-	// 	std::cout << this->entitys.size() << "  " << newSize << "\n";
+	// 	std:: << this->entitys.size() << "  " << newSize << "\n";
 
 	// 	for (uint16_t i = size; i < newSize - size; i++){
 	// 		Entity newEntity = this->currentRecognition[i - size + 1];
@@ -179,7 +196,9 @@ void Tracker::track_by_distance(){
 void Tracker::addToTrajectory(){
 	for (Entity& entity : this->entities){
 		entity.addToTrajectory();
+		cout << entity.getTrajetctory()->length << " ";
 	}
+	cout << "\n";
 }
  
 //TODO using a lot of shared pointers - performence heavy.
@@ -192,15 +211,19 @@ void Tracker::track(uint16_t* points, uint16_t* types, uint16_t size, uint8_t* i
 
 	this->addToTrajectory();
 
-	this->track_by_distance();
-	
+	this->makePredictions();
+
+	this->distanceTrack();
 	if (this->visualize){
 
-		this->drawRectes();
+		this->drawEntities();
+		this->drawPredictions();
 		cv::imshow("frame", this->img);
 		cv::waitKey(1);
 	}
 	this->currentRecognition.clear();
+	this->currentPrediction.clear();
+
 	/*
 		Tracker psudo code:
 
