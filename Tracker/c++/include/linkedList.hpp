@@ -9,11 +9,11 @@ typedef cv::Size2i Velocity2D;
 
 struct Node{
     
-    const vector<short> velocities;
+    Velocity2D velocities;
     const Rect rect;
     std::shared_ptr<struct Node> next;
 
-    Node(Rect rect, Node* next): rect(rect), next(nullptr) {}
+    Node(Rect rect, Velocity2D velocities, Node* next): rect(rect), velocities(velocities), next(nullptr) {}
 
     Node(Rect rect): rect(rect), next(nullptr){}
 
@@ -31,17 +31,17 @@ class LinkedList{
 
         LinkedList();
 
-        LinkedList(Rect& rect);
+        LinkedList(Rect& rect, Velocity2D velocities);
 
         Node getItem(uint16_t index);
 
-        void append(Rect rect);
+        void append(Rect rect, Velocity2D velocities);
 
         void remove(uint16_t index);
 
-        void prepend(Rect rect);
+        void prepend(Rect rect, Velocity2D velocities);
 
-        void insert(uint16_t index, Rect rect);
+        void insert(uint16_t index, Rect rect, Velocity2D velocities);
 
 };
 
