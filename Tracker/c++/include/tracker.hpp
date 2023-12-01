@@ -10,6 +10,7 @@ enum Types{
     BlueRobot = 0, RedRobot
 };
 
+
 class Tracker{
     
     public:
@@ -19,6 +20,7 @@ class Tracker{
         cv::Mat img;
         vector<Entity> entities;
         vector<Entity> currentRecognition;
+        vector<Entity> currentPrediction;
 
         Tracker(uint16_t* points, uint16_t* types, uint16_t size, uint8_t* img, uint16_t rows, uint16_t cols, bool visualize);
 
@@ -26,7 +28,9 @@ class Tracker{
 
         void setImg(uint8_t* img);
 
-        void drawRectes();
+        void drawEntities();
+
+        void drawPredictions();
         
         uint* findSimilarRectes();
 
@@ -34,11 +38,14 @@ class Tracker{
 
         void stablePoints();
 
-        void track_by_distance();
+        void distanceTrack();
 
         void addToTrajectory();
 
         void track(uint16_t* points, uint16_t* types, uint16_t size, uint8_t* img);
+
+        void makePredictions();
+
 
 };  
 
