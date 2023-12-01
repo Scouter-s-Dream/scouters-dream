@@ -51,7 +51,14 @@ class Entity{
         uint16_t findClosestEntityIndex(std::vector<Entity> &entityVector);
 
         void emptyBoundingRect();
+
+        void clacVelocities(uint numOfFrames);
+
+        void clacVelocities();
+
+        Rect predictNextBoundingRect();
         
+        void draw(cv::Mat& frame, cv::Scalar color);
 };
 
 std::ostream& operator<<(std::ostream& os, const Entity& e);

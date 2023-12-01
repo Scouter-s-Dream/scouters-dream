@@ -69,24 +69,57 @@ void Entity::emptyBoundingRect(){
 
 uint16_t Entity::findClosestEntityIndex(std::vector<Entity> &entityVector){
 
-    uint16_t maxDistance = 200; //TODO MAKE A SOMEHOW CALCULATED ONE
-    uint16_t distance = UINT16_MAX;
-    uint16_t idx = entityVector.size() - 1; 
+    uint maxDistanceSquared = 300*300; //TODO MAKE A SOMEHOW CALCULATED ONE
+    uint distanceSquared = UINT32_MAX;
+    uint16_t idx; 
 
     for (uint16_t i = 0, size = entityVector.size(); i < size; i++){
         Entity& checkedEntity = entityVector[i];
-        if (this->getType() == checkedEntity.getType()) {
-            cout << checkedEntity.getType() << " " << this->getType() << "\n";
-            uint currentDistance = this->squareDistanceTo(checkedEntity);
-            if (currentDistance < distance && currentDistance <= maxDistance){
+
+        if (this->getType() == checkedEntity.getType()) { 
+            uint currentDistanceSquared = this->squareDistanceTo(checkedEntity);
+
+            if (currentDistanceSquared < distanceSquared && currentDistanceSquared <= maxDistanceSquared){
                 idx = i;
-                distance = currentDistance;
+                distanceSquared = currentDistanceSquared;
             }
         }       
     }
-    std::cin.get();
     return idx;
 }
+
+void Entity::clacVelocities(uint numOfFrames){
+    //units are pixels per frame   
+    if (this->trajectory->length >= numOfFrames){
+        const Rect& startRect = this->trajectory->getItem(numOfFrames - 1).rect;
+        const Rect& endRect = this->trajectory->getItem(0).rect;
+
+        int velX = (int) ((startRect.x - endRect.x) / numOfFrames);
+        int velY = (int) ((startRect.y - endRect.y) / numOfFrames);
+
+        cout << "velX: " << velX << " velY: " << velY << "\n"; 
+        //velocites is a cv Size height and width correspond to VelX and velY 
+        this->velocities = Velocity2D(velX, velY);
+        cout << this->velocities << "\n";
+    } 
+}
+
+void Entity::clacVelocities(){
+    this->clacVelocities(3); //TODO make this number with logic
+}
+
+Rect Entity::predictNextBoundingRect(){
+    Rect prediction = this->boundingRect;
+    prediction.x += this->velocities.height;
+    prediction.y += this->velocities.width;
+    return prediction;
+}
+
+void Entity::draw(cv::Mat& frame, cv::Scalar color){
+		cv::rectangle(frame, this->boundingRect, color, 2);
+		cv::putText(frame, std::to_string(this->id), this->boundingRect.tl(), cv::FONT_HERSHEY_DUPLEX, 1, CV_RGB(255, 255, 0), 2);
+}
+
 
 std::ostream& operator<<(std::ostream& os, const Entity& t){
     os << "id: " << t.getId() << "\n";
