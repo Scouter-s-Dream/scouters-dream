@@ -6,8 +6,8 @@ LinkedList::LinkedList(){
     this->end = newNode;
 }
 
-LinkedList::LinkedList(Rect& boundingBox){
-    std::shared_ptr<Node> newNode = std::make_shared<Node>(boundingBox);
+LinkedList::LinkedList(Rect rect, Velocity2D velocities){
+    std::shared_ptr<Node> newNode = std::make_shared<Node>(rect, velocities);
     this->start = newNode;
     this->end = newNode;
 }
@@ -28,8 +28,7 @@ Node LinkedList::getItem(uint16_t index){
 
 }
 
-void LinkedList::append(Rect boundingBox){
-    std::shared_ptr<Node> newNode = std::make_shared<Node>(boundingBox); 
+void LinkedList::append(std::shared_ptr<Node> newNode){ 
     this->end->next = newNode;
     this->end = newNode;
     this->length++;
@@ -58,28 +57,26 @@ void LinkedList::remove(uint16_t index){
     
 }
 
-void LinkedList::prepend(Rect boundingBox){
-    std::shared_ptr<Node> newNode = std::make_shared<Node>(boundingBox);
+void LinkedList::prepend(std::shared_ptr<Node> newNode){
     newNode->next = this->start;    
     this->start = newNode;
     this->length++;
 }
 
-void LinkedList::insert(uint16_t index, Rect boundingBox){
+void LinkedList::insert(uint16_t index, std::shared_ptr<Node> newNode){
     if (index > this->length || index < 0){
         throw "Out of Bounds";
     }
 
-    std::shared_ptr<Node> newNode = std::make_shared<Node>(boundingBox);
 
     std::shared_ptr<Node> ref = this->start;
 
     if (index == 0){
-        this->prepend(boundingBox);
+        this->prepend(newNode);
     }
     
     if (index == this->length){
-        this->append(boundingBox);
+        this->append(newNode);
     }
 
     for (uint16_t i = 0; ref != nullptr && i < index - 1; i++){
