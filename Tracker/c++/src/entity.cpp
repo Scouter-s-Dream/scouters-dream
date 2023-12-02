@@ -3,7 +3,7 @@
 Entity::Entity(uint16_t id, uint16_t type, Rect boundingRect) 
     : id(id), type(type){
     this->setBoundingRect(boundingRect);
-    this->trajectory = std::make_shared<LinkedList>(boundingRect);
+    this->trajectory = std::make_shared<LinkedList>(boundingRect, Velocity2D(0, 0));
 }
 
 Entity::Entity() 
@@ -21,7 +21,8 @@ void Entity::setBoundingRect(Rect boundningRect){
 }
 
 void Entity::addToTrajectory(){
-    this->trajectory->prepend(this->boundingRect);
+    std::shared_ptr<Node> newNode = std::make_shared<Node>(this->boundingRect, this->velocities);
+    this->trajectory->prepend(newNode);
 }
 
 Rect& Entity::getBoundingRect(){
@@ -94,12 +95,12 @@ void Entity::clacVelocities(uint numOfFrames){
         const Rect& startRect = this->trajectory->getItem(numOfFrames - 1).rect;
         const Rect& endRect = this->trajectory->getItem(0).rect;
 
-        int velX = (int) ((startRect.x - endRect.x) / numOfFrames);
-        int velY = (int) ((startRect.y - endRect.y) / numOfFrames);
-
-        cout << "velX: " << velX << " velY: " << velY << "\n"; 
+        int velX = (int) ((endRect.x - startRect.x) / numOfFrames);
+        int velY = (int) ((endRect.y - startRect.y) / numOfFrames);
         //velocites is a cv Size height and width correspond to VelX and velY 
-        this->velocities = Velocity2D(velX, velY);
+        this->velocities.velX = velX;
+        this->velocities.velY = velY;
+
         cout << this->velocities << "\n";
     } 
 }
@@ -110,8 +111,8 @@ void Entity::clacVelocities(){
 
 Rect Entity::predictNextBoundingRect(){
     Rect prediction = this->boundingRect;
-    prediction.x += this->velocities.height;
-    prediction.y += this->velocities.width;
+    prediction.x += this->velocities.velX;
+    prediction.y += this->velocities.velY;
     return prediction;
 }
 

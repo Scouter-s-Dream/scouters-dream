@@ -5,6 +5,7 @@
 #include <limits>
 #include "vectorFuncs.hpp"
 #include <opencv4/opencv2/opencv.hpp>
+#include "velocity2d.hpp"
 
 class Entity{
 
