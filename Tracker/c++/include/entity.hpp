@@ -4,8 +4,6 @@
 #include "linkedList.hpp"
 #include <limits>
 #include "vectorFuncs.hpp"
-#include <opencv4/opencv2/opencv.hpp>
-#include "velocity2d.hpp"
 
 class Entity{
 
@@ -21,6 +19,8 @@ class Entity{
         
         Entity(uint16_t id, uint16_t type, Rect BoundingRect);
 
+        Entity(const Entity& e);
+
         Entity();
         
         void setBoundingRect(Rect newBoundingRect);
@@ -29,9 +29,9 @@ class Entity{
 
         Rect& getBoundingRect();
 
-        const uint16_t getId();
+        uint16_t getId();
 
-        const uint16_t getType();
+        uint16_t getType();
 
         Velocity2D getVelocities();
 
@@ -39,9 +39,9 @@ class Entity{
 
         Rect getBoundingRect() const;
 
-        const uint16_t getId() const;
+        uint16_t getId() const;
 
-        const uint16_t getType() const;
+        uint16_t getType() const;
 
         std::shared_ptr<LinkedList> getTrajetctory() const;
 
@@ -53,7 +53,7 @@ class Entity{
 
         void emptyBoundingRect();
 
-        void clacVelocities(uint numOfFrames);
+        void clacVelocities(int numOfFrames);
 
         void clacVelocities();
 

@@ -6,6 +6,12 @@ Entity::Entity(uint16_t id, uint16_t type, Rect boundingRect)
     this->trajectory = std::make_shared<LinkedList>(boundingRect, Velocity2D(0, 0));
 }
 
+Entity::Entity(const Entity& e) 
+    : id(e.getId()), type(e.getType()){
+    this->setBoundingRect(e.getBoundingRect());
+    this->trajectory = std::make_shared<LinkedList>(boundingRect, Velocity2D(0, 0));
+}
+
 Entity::Entity() 
     : id(UINT16_MAX), type(UINT16_MAX){
     this->boundingRect = Rect();
@@ -29,11 +35,11 @@ Rect& Entity::getBoundingRect(){
     return this->boundingRect;
 }
 
-const uint16_t Entity::getId(){
+uint16_t Entity::getId(){
     return this->id;
 }
 
-const uint16_t Entity::getType(){
+uint16_t Entity::getType(){
     return this->type;
 }
 
@@ -45,11 +51,11 @@ Rect Entity::getBoundingRect() const{
     return this->boundingRect;
 }
 
-const uint16_t Entity::getId() const{
+uint16_t Entity::getId() const{
     return this->id;
 }
 
-const uint16_t Entity::getType() const{
+uint16_t Entity::getType() const{
     return this->type;
 }
 
@@ -72,7 +78,7 @@ uint16_t Entity::findClosestEntityIndex(std::vector<Entity> &entityVector){
 
     uint maxDistanceSquared = 300*300; //TODO MAKE A SOMEHOW CALCULATED ONE
     uint distanceSquared = UINT32_MAX;
-    uint16_t idx; 
+    uint16_t idx = entityVector.size(); 
 
     for (uint16_t i = 0, size = entityVector.size(); i < size; i++){
         Entity& checkedEntity = entityVector[i];
@@ -89,19 +95,13 @@ uint16_t Entity::findClosestEntityIndex(std::vector<Entity> &entityVector){
     return idx;
 }
 
-void Entity::clacVelocities(uint numOfFrames){
+void Entity::clacVelocities(int numOfFrames){
     //units are pixels per frame   
     if (this->trajectory->length >= numOfFrames){
         const Rect& startRect = this->trajectory->getItem(numOfFrames - 1).rect;
         const Rect& endRect = this->trajectory->getItem(0).rect;
-
-        int velX = (int) ((endRect.x - startRect.x) / numOfFrames);
-        int velY = (int) ((endRect.y - startRect.y) / numOfFrames);
-        //velocites is a cv Size height and width correspond to VelX and velY 
-        this->velocities.velX = velX;
-        this->velocities.velY = velY;
-
-        cout << this->velocities << "\n";
+        this->velocities.y = ((endRect.x - startRect.x) / numOfFrames);
+        this->velocities.x = ((endRect.y - startRect.y) / numOfFrames);
     } 
 }
 
@@ -111,8 +111,8 @@ void Entity::clacVelocities(){
 
 Rect Entity::predictNextBoundingRect(){
     Rect prediction = this->boundingRect;
-    prediction.x += this->velocities.velX;
-    prediction.y += this->velocities.velY;
+    prediction.x += this->velocities.x;
+    prediction.y += this->velocities.y;
     return prediction;
 }
 
