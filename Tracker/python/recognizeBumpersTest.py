@@ -6,16 +6,15 @@ from tracker import Tracker
 
 #TEST CODE DONT TAKE SERIOUSLY
 print("loading")
-cap = cv2.VideoCapture('test_videos/dcmp.mp4')
+cap = cv2.VideoCapture('test_videos/q1dis3.mp4')
 modelBumpers = YOLO('bumper_weights/v4/best (3).pt')
 
-for _ in range(10):
-    success, frame = cap.read()
+success, frame = cap.read()
 
 def prepFrame(frame):
-    # frame = cv2.resize(frame, (640, 640))
-    frame = frame[250 : 650]
-    # frame = cv2.resize(frame, (1280, 500))
+    frame = cv2.resize(frame, (640, 640))
+    frame = frame[250 : 450]
+    frame = cv2.resize(frame, (1280, 500))
     return frame
 
 def YoloToPointsAndTypes(YOLO_result):
