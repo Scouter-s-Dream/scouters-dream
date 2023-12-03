@@ -5,3 +5,5 @@ Pipfile.lock
 build
 **/.vscode/
 **/*.so
+legacyCode.cpp
+*.mp4
