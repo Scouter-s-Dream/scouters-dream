@@ -46,6 +46,8 @@ class Tracker{
 
         void makePredictions();
 
+        cv::Scalar chooseColor(Entity& e);
+
 
 };  
 
