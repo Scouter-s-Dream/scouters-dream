@@ -5,7 +5,7 @@
 #include <memory>
 
 typedef struct Node Node;
-
+typedef cv::Point2i Velocity2D;
 struct Node{
     
     const Rect rect;

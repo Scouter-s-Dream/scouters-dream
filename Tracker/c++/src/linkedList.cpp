@@ -14,7 +14,7 @@ LinkedList::LinkedList(Rect rect, Velocity2D velocities){
 
 Node LinkedList::getItem(uint16_t index){
 
-    if (index > this->length || index < 0){
+    if (index > this->length){
         throw "Out of Bounds";
     }
 
@@ -36,7 +36,7 @@ void LinkedList::append(std::shared_ptr<Node> newNode){
 
 void LinkedList::remove(uint16_t index){
     
-    if (index > this->length || index < 0){
+    if (index > this->length){
         throw "Out of Bounds";
     }
 
@@ -64,7 +64,7 @@ void LinkedList::prepend(std::shared_ptr<Node> newNode){
 }
 
 void LinkedList::insert(uint16_t index, std::shared_ptr<Node> newNode){
-    if (index > this->length || index < 0){
+    if (index > this->length){
         throw "Out of Bounds";
     }
 
